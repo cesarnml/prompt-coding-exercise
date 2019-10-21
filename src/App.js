@@ -13,6 +13,7 @@ const App = () => {
   const [objects, setObjects] = useState([])
 
   useEffect(() => {
+    console.log(process.env.REACT_APP_SERVER_URL)
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/universities`)
       .then(response => {
