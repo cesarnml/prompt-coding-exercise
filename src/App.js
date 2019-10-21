@@ -1,66 +1,93 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { grommet } from 'grommet/themes'
-import { Box, Grommet, Select, FormField, Heading } from 'grommet'
+import { Box, Grommet, Select, Heading, Text } from 'grommet'
 
 const App = () => {
-  const [options, setOptions] = useState([])
   const [defaults, setDefaults] = useState([])
+  const [options, setOptions] = useState([])
+  const [objects, setObjects] = useState([])
   const [value, setValue] = useState('')
-  const [value2, setValue2] = useState('')
 
   const [university, setUniversity] = useState({})
-  const [objects, setObjects] = useState([])
 
   useEffect(() => {
-    console.log(process.env.REACT_APP_SERVER_URL)
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/universities`)
-      .then(response => {
-        setObjects(
-          response.data.map(ele => ({
-            value: ele.iped,
-            label: ele.name,
-          }))
-        )
-        setDefaults(response.data.map(ele => ele.name))
-        setOptions(response.data.map(ele => ele.name))
-      })
-      .catch(err => {
-        console.error(err)
-      })
+    const fetchUniversities = async () => {
+      const { data: universities } = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/universities`
+      )
+      const universityNames = universities.map(ele => ele.name)
+      setObjects(
+        universities.map(ele => ({ value: ele.iped, label: ele.name }))
+      )
+      setDefaults(universityNames)
+      setOptions(universityNames)
+    }
+
+    try {
+      fetchUniversities()
+    } catch (err) {
+      console.error(err)
+    }
   }, [])
 
   useEffect(() => {
-    if (!!value && parseInt(objects.length)) {
-      axios
-        .get(
-          `https://content-staging.prompt.com/api/data/university/${
-            objects.find(obj => obj.label === value)['value']
-          }/`,
-          {
-            headers: {
-              Authorization: `Token ${process.env.REACT_APP_PROMPT_TOKEN}`,
-            },
-          }
+    if (value && objects.length) {
+      const fetchUniversity = async iped => {
+        const config = {
+          headers: {
+            Authorization: `Token ${process.env.REACT_APP_PROMPT_TOKEN}`,
+          },
+        }
+        const res = await axios.get(
+          `${process.env.REACT_APP_PROMPT_URL}/api/data/university/${iped}/`,
+          config
         )
-        .then(res => setUniversity(res.data))
+        const university = res.data
+
+        if (
+          university.applications.includes('Coalition App') &&
+          university.applications.includes('Common App')
+        ) {
+          const indexCoalition = university.applications.indexOf(
+            'Coalition App'
+          )
+          const indexCommon = university.applications.indexOf('Common App')
+          const temp = university.applications[indexCoalition]
+          university.applications[indexCoalition] =
+            university.applications[indexCommon]
+          university.applications[indexCommon] = temp
+        }
+        if (university.has_own_application) {
+          university.applications.push('University Application')
+        }
+        setUniversity(university)
+      }
+      const iped = objects.find(obj => obj.label === value).value
+      fetchUniversity(iped)
     }
   }, [value, objects])
+
   return (
     <Grommet full theme={grommet}>
-      <Box align='center' justify='start' pad='medium'>
-        <FormField label='Search for a school to add'>
+      <Box
+        pad='medium'
+        align='start'
+        width='xlarge'
+        border={{ color: 'red' }}
+        margin='small'
+      >
+        <Heading level='2'>Select a university</Heading>
+        <Box width='medium' pad='medium'>
           <Select
             size='medium'
             dropHeight='medium'
-            placeholder='Select a university'
+            placeholder='MIT'
             searchPlaceholder='Search a university'
             value={value}
-            options={options || []}
+            options={options}
             onChange={({ option }) => {
               setValue(option)
-              setValue2('')
             }}
             onClose={() => setOptions(defaults)}
             onSearch={text => {
@@ -70,63 +97,195 @@ const App = () => {
               setOptions(defaults.filter(o => exp.test(o)))
             }}
           />
-        </FormField>
-      </Box>
-      {!!value && (
-        <Box>
-          <h2>Select Application and Optional Essays</h2>
-          <Box align='center' justify='start' pad='medium'>
-            <FormField
-              htmlFor='application-type'
-              label='          Select Your Application'
-            >
-              <Select
-                id='application-type'
-                size='medium'
-                dropHeight='medium'
-                placeholder='Select application type'
-                disabled={
-                  !value && !Object.keys(university).length ? true : false
-                }
-                value={value2}
-                options={university.applications || []}
-                onChange={({ option }) => setValue2(option)}
-                onClose={() => setOptions(defaults)}
-              />
-            </FormField>
-          </Box>
         </Box>
-      )}
-      {!!value && (
-        <label htmlFor='application-type'>
-          Required Essays{' '}
-          <span>
-            <strong>
-              (
-              {university.application_essays &&
-                [
-                  ...university.supplements,
-                  ...university.application_essays,
-                ].filter(essay => !essay.optional).length}
-              )
-            </strong>
-          </span>
-        </label>
-      )}
-      {!!university.supplements && !!university.application_essays && (
-        <>
-          <Heading alignSelf='center'>{university.name}</Heading>
-          <pre>
-            {JSON.stringify(
-              [
-                ...university.supplements,
-                ...university.application_essays,
-              ].filter(essay => !essay.optional),
-              null,
-              2
-            )}
-          </pre>
-        </>
+      </Box>
+      {university.name && (
+        <Box
+          align='start'
+          pad='medium'
+          width='xlarge'
+          border={{ color: 'green' }}
+          margin='small'
+        >
+          {university.name && (
+            <Heading level='2'>
+              Essay Requirements -{' '}
+              {university.name === 'University Application'
+                ? 'University-Specific Application'
+                : university.name}
+            </Heading>
+          )}
+          {university.applications &&
+            university.applications.map(appType => (
+              <Box
+                key={appType}
+                margin={{ bottom: 'xlarge' }}
+                border={{ color: 'purple' }}
+                width='large'
+              >
+                <Box
+                  pad={{ horizontal: 'medium', vertical: 'small' }}
+                  border={{
+                    side: 'bottom',
+                    style: 'dashed',
+                    size: 'small',
+                    color: 'black',
+                  }}
+                >
+                  <Heading level='3' margin='0'>
+                    {appType === 'University Application'
+                      ? 'University-Specific Application'
+                      : appType}
+                  </Heading>
+                </Box>
+                <Box
+                  as='h4'
+                  direction='row'
+                  justify='between'
+                  margin={{ horizontal: 'small' }}
+                  border={{ color: 'green' }}
+                  pad='medium'
+                >
+                  <Text>Application Essays</Text>
+                  <Text>{`${
+                    appType === 'Common App'
+                      ? university.applications.length
+                      : '0'
+                  } ${
+                    university.applications.length > 1 ? 'Essays' : 'Essay'
+                  }`}</Text>
+                </Box>
+                <Box
+                  as='ul'
+                  margin={{ horizontal: 'small' }}
+                  pad={{ left: 'medium' }}
+                  style={{ border: '1px solid pink' }}
+                >
+                  {appType === 'Common App'
+                    ? university.application_essays.map(essay => (
+                        <Text
+                          as='li'
+                          key={essay.name}
+                          style={{ listStyle: 'none' }}
+                        >
+                          <Text>{essay.name}</Text>
+                        </Text>
+                      ))
+                    : null}
+                </Box>
+                <Box
+                  as='h4'
+                  direction='row'
+                  justify='between'
+                  margin={{ horizontal: 'small' }}
+                  border={{ color: 'green' }}
+                  pad='medium'
+                >
+                  <Text>Required Supplements</Text>
+                  <Text>{`${
+                    university.supplements
+                      .filter(supp => supp.applications.includes(appType))
+                      .filter(supp => !supp.optional).length
+                  } Essays`}</Text>
+                </Box>
+                <Box
+                  as='ul'
+                  margin={{ horizontal: 'small' }}
+                  pad={{ left: 'medium' }}
+                  style={{ border: '1px solid pink' }}
+                >
+                  {university.supplements
+                    .filter(supp => !supp.optional)
+                    .filter(supp => supp.applications.includes(appType))
+                    .map(essay => (
+                      <Box
+                        as='li'
+                        key={essay.name}
+                        style={{ listStyle: 'none' }}
+                      >
+                        <Text>{essay.name}</Text>
+                      </Box>
+                    ))}
+                </Box>
+                <Box
+                  as='h4'
+                  direction='row'
+                  justify='between'
+                  margin={{ horizontal: 'small' }}
+                  border={{ color: 'green' }}
+                  pad='medium'
+                >
+                  <Text>Optional Supplements</Text>
+                  <Text>{`${
+                    university.supplements
+                      .filter(supp => supp.applications.includes(appType))
+                      .filter(supp => supp.optional).length
+                  } Essays`}</Text>
+                </Box>
+
+                <Box
+                  as='ul'
+                  margin={{ horizontal: 'small' }}
+                  pad={{ left: 'medium' }}
+                  style={{ border: '1px solid pink' }}
+                >
+                  {university.supplements &&
+                    university.supplements
+                      .filter(supp => supp.optional)
+                      .filter(supp => supp.applications.includes(appType))
+                      .map(essay => (
+                        <Box
+                          as='li'
+                          key={essay.name}
+                          style={{ listStyle: 'none' }}
+                        >
+                          <Text>{essay.name}</Text>
+                        </Box>
+                      ))}
+                </Box>
+              </Box>
+            ))}
+          {university.programs.filter(prog => !!prog.supplements.length)
+            .length && (
+            <Box
+              margin={{ bottom: 'xlarge' }}
+              border={{ color: 'purple' }}
+              width='large'
+            >
+              <Box
+                pad={{ horizontal: 'medium', vertical: 'small' }}
+                border={{
+                  side: 'bottom',
+                  style: 'dashed',
+                  size: 'small',
+                  color: 'black',
+                }}
+              >
+                <Heading level='3' margin='0'>
+                  Programs, Majors, and Scholarships
+                </Heading>
+              </Box>
+
+              {university.programs &&
+                university.programs
+                  .filter(prog => !!prog.supplements.length)
+                  .map(prog => (
+                    <Box
+                      margin={{ left: 'small' }}
+                      direction='row'
+                      justify='between'
+                      pad='medium'
+                      key={prog.name}
+                    >
+                      <Text>{prog.name}</Text>
+                      <Text>{`${prog.supplements.length} ${
+                        prog.supplements.length > 1 ? 'Essays' : 'Essay'
+                      }`}</Text>
+                    </Box>
+                  ))}
+            </Box>
+          )}
+        </Box>
       )}
     </Grommet>
   )
