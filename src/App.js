@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/universities')
+      .get(`${process.env.REACT_APP_SERVER_URL}/universities`)
       .then(response => {
         setObjects(
           response.data.map(ele => ({
