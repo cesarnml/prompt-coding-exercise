@@ -67,6 +67,8 @@ export const ApplicationEssays = ({
                     </Box>
                     <Box width='large' margin={{ right: 'small' }}>
                       <Box
+                        direction='row'
+                        align='center'
                         border={{
                           side: 'bottom',
                           size: 'small',
@@ -75,6 +77,20 @@ export const ApplicationEssays = ({
                         margin={{ bottom: 'small' }}
                       >
                         <Text weight='bold'>{essay.name}</Text>
+                        <Box
+                          margin={{ left: 'small' }}
+                          height='18px'
+                          justify='center'
+                          background='#2DA7A4'
+                          round='small'
+                          pad={{ horizontal: 'xsmall' }}
+                        >
+                          <Text color='white' weight='bold' size='xsmall'>
+                            {essay.last_updated === new Date().getFullYear()
+                              ? 'Current'
+                              : essay.last_updated}
+                          </Text>
+                        </Box>
                       </Box>
                       <Box as='ul'>
                         {essay.prompts.map(({ prompt }) => (
