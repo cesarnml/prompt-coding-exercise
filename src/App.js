@@ -4,36 +4,23 @@ import { Grommet } from 'grommet'
 import { grommet } from 'grommet/themes'
 import UniversitySelect from './components/UniversitySelect'
 import UniversityDetails from './components/UniversityDetails'
-
-const swapAppTypes = (arr, swap1, swap2) => {
-  // if both elements present => swap elements and return swapped array
-  if (arr.includes(`${swap1} App`) && arr.includes(`${swap2} App`)) {
-    const index1 = arr.indexOf(`${swap1} App`)
-    const index2 = arr.indexOf(`${swap2} App`)
-    const temp = arr[index1]
-    arr[index1] = arr[index2]
-    arr[index2] = temp
-  }
-  return arr
-}
+import { getUniversities } from './apis'
+import { swap } from './utility'
 
 const showUniDetails = uni => {
   return !!uni.name
 }
 
 const App = () => {
+  const [value, setValue] = useState('')
   const [defaults, setDefaults] = useState([])
   const [options, setOptions] = useState([])
   const [objects, setObjects] = useState([])
-  const [value, setValue] = useState('')
-
   const [university, setUniversity] = useState({})
 
   useEffect(() => {
     const fetchUniversities = async () => {
-      const { data: universities } = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/universities`
-      )
+      const { data: universities } = await getUniversities()
       const universityNames = universities.map(ele => ele.name)
       setObjects(
         universities.map(ele => ({ value: ele.iped, label: ele.name }))
@@ -63,7 +50,7 @@ const App = () => {
           config
         )
         //* Swap Common App and Coalition App
-        university.applications = swapAppTypes(
+        university.applications = swap(
           university.applications,
           'Common',
           'Coalition'
