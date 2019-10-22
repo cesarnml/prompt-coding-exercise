@@ -1,26 +1,48 @@
 import React from 'react'
 import { Box, Heading } from 'grommet'
-import ApplicationDetails from './ApplicationDetails'
 import ProgramDetails from './ProgramDetails'
+import ApplicationEssays from './ApplicationEssays'
+import RequiredSupplements from './RequiredSupplements'
+import OptionalSupplements from './OptionalSupplements'
+import AppTypeHeader from './AppTypeHeader'
+
+const countPrograms = programs => {
+  return !!programs.filter(prog => !!prog.supplements.length).length
+}
 
 const UniversityDetails = ({ label, university }) => {
+  const {
+    name,
+    applications,
+    programs,
+    supplements,
+    application_essays,
+  } = university
+
   return (
     <Box align='start' margin='small' pad='medium' border={{ color: 'green' }}>
-      <Heading level='3'>{`${label} - ${university.name}`}</Heading>
-      {university.applications.map(appType => (
-        <ApplicationDetails
+      <Heading level='3'>{`${label} - ${name}`}</Heading>
+      {applications.map(appType => (
+        <Box
           key={appType}
-          appType={appType}
-          university={university}
-        />
+          margin={{ bottom: 'xlarge' }}
+          border={{ color: 'purple' }}
+          width='large'
+        >
+          <AppTypeHeader appType={appType} />
+          <ApplicationEssays
+            appType={appType}
+            applications={applications}
+            application_essays={application_essays}
+          />
+          <RequiredSupplements appType={appType} supplements={supplements} />
+          <OptionalSupplements appType={appType} supplements={supplements} />
+        </Box>
       ))}
-      {!!university.programs.filter(prog => !!prog.supplements.length)
-        .length && (
+      {countPrograms(programs) && (
         <ProgramDetails
           label='Programs, Majors, and Scholarships'
-          programs={university.programs.filter(
-            prog => !!prog.supplements.length
-          )}
+          programs={programs.filter(prog => !!prog.supplements.length)}
         />
       )}
     </Box>

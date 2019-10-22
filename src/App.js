@@ -17,6 +17,10 @@ const swapAppTypes = (arr, swap1, swap2) => {
   return arr
 }
 
+const showUniDetails = uni => {
+  return !!uni.name
+}
+
 const App = () => {
   const [defaults, setDefaults] = useState([])
   const [options, setOptions] = useState([])
@@ -88,7 +92,7 @@ const App = () => {
         setValue={setValue}
         setOptions={setOptions}
       />
-      {!!university.name && (
+      {showUniDetails(university) && (
         <UniversityDetails label='Essay Requirements' university={university} />
       )}
     </Grommet>
