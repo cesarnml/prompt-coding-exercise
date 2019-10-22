@@ -5,6 +5,18 @@ import { grommet } from 'grommet/themes'
 import UniversitySelect from './components/UniversitySelect'
 import UniversityDetails from './components/UniversityDetails'
 
+const swapAppTypes = (arr, swap1, swap2) => {
+  // if both elements present => swap elements and return swapped array
+  if (arr.includes(`${swap1} App`) && arr.includes(`${swap2} App`)) {
+    const index1 = arr.indexOf(`${swap1} App`)
+    const index2 = arr.indexOf(`${swap2} App`)
+    const temp = arr[index1]
+    arr[index1] = arr[index2]
+    arr[index2] = temp
+  }
+  return arr
+}
+
 const App = () => {
   const [defaults, setDefaults] = useState([])
   const [options, setOptions] = useState([])
@@ -29,6 +41,7 @@ const App = () => {
     try {
       fetchUniversities()
     } catch (err) {
+      //TODO: generalize error catcher
       console.error(err)
     }
   }, [])
@@ -41,26 +54,17 @@ const App = () => {
             Authorization: `Token ${process.env.REACT_APP_PROMPT_TOKEN}`,
           },
         }
-        const res = await axios.get(
+        const { data: university } = await axios.get(
           `${process.env.REACT_APP_PROMPT_URL}/api/data/university/${iped}/`,
           config
         )
-        const university = res.data
-        //* if Common App & Coalition App present
-        //* Swap-Order
-        if (
-          university.applications.includes('Coalition App') &&
-          university.applications.includes('Common App')
-        ) {
-          const indexCoalition = university.applications.indexOf(
-            'Coalition App'
-          )
-          const indexCommon = university.applications.indexOf('Common App')
-          const temp = university.applications[indexCoalition]
-          university.applications[indexCoalition] =
-            university.applications[indexCommon]
-          university.applications[indexCommon] = temp
-        }
+        //* Swap Common App and Coalition App
+        university.applications = swapAppTypes(
+          university.applications,
+          'Common',
+          'Coalition'
+        )
+
         //* University has_own_application => push into applications array
         if (university.has_own_application) {
           university.applications.push('University Application')
@@ -68,6 +72,7 @@ const App = () => {
 
         setUniversity(university)
       }
+      //TODO: Consider optimizing
       const iped = objects.find(obj => obj.label === value).value
       fetchUniversity(iped)
     }

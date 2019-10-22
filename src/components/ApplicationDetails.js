@@ -26,7 +26,7 @@ const ApplicationDetails = ({ appType, university }) => {
           color: 'black',
         }}
       >
-        <Heading level='3' margin='none'>
+        <Heading level='4' margin='none'>
           {renderAppTypeHeading(appType)}
         </Heading>
       </Box>

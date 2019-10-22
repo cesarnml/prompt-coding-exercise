@@ -7,7 +7,7 @@ const EssayCategory = ({ appType, category, university }) => {
     <Box pad='medium'>
       <Box direction='row' justify='between'>
         <Box direction='row'>
-          <Down />
+          <Down size='small' />
           <Text margin={{ left: 'small' }}>{category}</Text>
         </Box>
         {category === 'Application Essays' ? (

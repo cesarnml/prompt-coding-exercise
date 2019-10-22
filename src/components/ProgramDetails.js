@@ -12,7 +12,7 @@ const ProgramDetails = ({ label, programs }) => {
           color: 'black',
         }}
       >
-        <Heading level='3' margin='0'>
+        <Heading level='4' margin='0'>
           {label}
         </Heading>
       </Box>
