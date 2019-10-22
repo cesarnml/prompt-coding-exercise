@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Text } from 'grommet'
 
-export const RequiredSupplements = ({ appType, supplements }) => {
+export const Supplements = ({ appType, label, supplements }) => {
   const [show, setShow] = useState(false)
   return (
     <Box>
@@ -14,11 +14,13 @@ export const RequiredSupplements = ({ appType, supplements }) => {
         pad='medium'
         onClick={() => setShow(prev => !prev)}
       >
-        <Text>Required Supplements</Text>
+        <Text>{`${label} Supplements`}</Text>
         <Text>{`${
           supplements
             .filter(supp => supp.applications.includes(appType))
-            .filter(supp => !supp.optional).length
+            .filter(supp =>
+              label === 'Required' ? !supp.optional : supp.optional
+            ).length
         } Essays`}</Text>
       </Box>
 
@@ -30,7 +32,9 @@ export const RequiredSupplements = ({ appType, supplements }) => {
           style={{ border: '1px solid pink' }}
         >
           {supplements
-            .filter(supp => !supp.optional)
+            .filter(supp =>
+              label === 'Required' ? !supp.optional : supp.optional
+            )
             .filter(supp => supp.applications.includes(appType))
             .map(essay => (
               <Box as='li' key={essay.name} style={{ listStyle: 'none' }}>

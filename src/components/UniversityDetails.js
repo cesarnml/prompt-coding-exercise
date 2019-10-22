@@ -3,8 +3,7 @@ import { Box, Heading } from 'grommet'
 import {
   ProgramDetails,
   ApplicationEssays,
-  RequiredSupplements,
-  OptionalSupplements,
+  Supplements,
   AppTypeHeader,
 } from 'components'
 
@@ -37,8 +36,16 @@ export const UniversityDetails = ({ label, university }) => {
             applications={applications}
             application_essays={application_essays}
           />
-          <RequiredSupplements appType={appType} supplements={supplements} />
-          <OptionalSupplements appType={appType} supplements={supplements} />
+          <Supplements
+            label='Required'
+            appType={appType}
+            supplements={supplements}
+          />
+          <Supplements
+            label='Optional'
+            appType={appType}
+            supplements={supplements}
+          />
         </Box>
       ))}
       {countPrograms(programs) && (
