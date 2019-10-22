@@ -27,8 +27,8 @@ export const UniversityDetails = ({ label, university }) => {
         <Box
           key={appType}
           margin={{ bottom: 'xlarge' }}
-          border={{ color: 'purple' }}
           width='large'
+          elevation='small'
         >
           <AppTypeHeader appType={appType} />
           <ApplicationEssays

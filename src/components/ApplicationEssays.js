@@ -7,6 +7,7 @@ export const ApplicationEssays = ({
   application_essays,
 }) => {
   const [show, setShow] = useState(false)
+  const [isHover, setHover] = useState(false)
 
   const sorted_essays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
@@ -17,23 +18,22 @@ export const ApplicationEssays = ({
         as='h4'
         direction='row'
         justify='between'
-        margin={{ horizontal: 'small' }}
-        border={{ color: 'green' }}
+        background={isHover ? '#C7E9E5' : 'none'}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
         pad='medium'
         onClick={() => setShow(prev => !prev)}
+        style={{ cursor: 'pointer' }}
       >
         <Text>Application Essays</Text>
         <Text>{`${appType === 'Common App' ? applications.length : '0'} ${
-          applications.length > 1 ? 'Essays' : 'Essay'
+          applications.length > 1 && appType === 'Common App'
+            ? 'Essays'
+            : 'Essay'
         }`}</Text>
       </Box>
       {show && (
-        <Box
-          as='ul'
-          margin={{ horizontal: 'small', bottom: 'medium' }}
-          pad={{ left: 'medium' }}
-          style={{ border: '1px solid pink' }}
-        >
+        <Box as='ul' margin={{ bottom: 'medium' }}>
           {appType === 'Common App'
             ? sorted_essays.map(essay => (
                 <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
@@ -48,7 +48,7 @@ export const ApplicationEssays = ({
                     </Box>
                   )}
                   <Box direction='row' justify='between'>
-                    <Box width='small'>
+                    <Box width='small' margin='small'>
                       <Box
                         border={{
                           side: 'bottom',
