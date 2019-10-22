@@ -1,33 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { Grommet } from 'grommet'
 import { grommet } from 'grommet/themes'
-import UniversitySelect from './components/UniversitySelect'
-import UniversityDetails from './components/UniversityDetails'
-import { getUniversities } from './apis'
-import { swap } from './utility'
-
-const showUniDetails = uni => {
-  return !!uni.name
-}
+import { UniversitySelect, UniversityDetails } from 'components'
+import { getUniversities, getUniversity } from 'apis'
+import { swap, isEmpty } from 'utils'
 
 const App = () => {
   const [value, setValue] = useState('')
+  const [hash, setHash] = useState([])
   const [defaults, setDefaults] = useState([])
   const [options, setOptions] = useState([])
-  const [objects, setObjects] = useState([])
   const [university, setUniversity] = useState({})
 
   useEffect(() => {
     const fetchUniversities = async () => {
       const { data: universities } = await getUniversities()
       const universityNames = universities.map(ele => ele.name)
-      setObjects(
+
+      setHash(
         universities.reduce((acc, cur) => {
           return { ...acc, ...{ [cur.name]: cur.iped } }
         }, {})
       )
-
       setDefaults(universityNames)
       setOptions(universityNames)
     }
@@ -41,18 +35,11 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (value && Object.keys(objects).length) {
+    if (value && !isEmpty(hash)) {
       const fetchUniversity = async iped => {
-        const config = {
-          headers: {
-            Authorization: `Token ${process.env.REACT_APP_PROMPT_TOKEN}`,
-          },
-        }
-        const { data: university } = await axios.get(
-          `${process.env.REACT_APP_PROMPT_URL}/api/data/university/${iped}/`,
-          config
-        )
+        const { data: university } = await getUniversity(iped)
         //* Swap Common App and Coalition App
+        //? Is this mutating state?
         university.applications = swap(
           university.applications,
           'Common',
@@ -60,6 +47,7 @@ const App = () => {
         )
 
         //* University has_own_application => push into applications array
+        //? Is this mutating state?
         if (university.has_own_application) {
           university.applications.push('University Application')
         }
@@ -68,10 +56,14 @@ const App = () => {
       }
       //TODO: Consider optimizing
       //# O(N) to O(1) ... optimization success
-      const iped = objects[value]
-      fetchUniversity(iped)
+      const iped = hash[value]
+      try {
+        fetchUniversity(iped)
+      } catch (err) {
+        console.error(err)
+      }
     }
-  }, [value, objects])
+  }, [value, hash])
 
   return (
     <Grommet full theme={grommet}>
@@ -83,7 +75,7 @@ const App = () => {
         setValue={setValue}
         setOptions={setOptions}
       />
-      {showUniDetails(university) && (
+      {!isEmpty(university) && (
         <UniversityDetails label='Essay Requirements' university={university} />
       )}
     </Grommet>

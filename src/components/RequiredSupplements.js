@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Text } from 'grommet'
 
-const RequiredSupplements = ({ appType, supplements }) => {
+export const RequiredSupplements = ({ appType, supplements }) => {
   const [show, setShow] = useState(false)
   return (
     <Box>
@@ -42,5 +42,3 @@ const RequiredSupplements = ({ appType, supplements }) => {
     </Box>
   )
 }
-
-export default RequiredSupplements

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Select, Text } from 'grommet'
 
-const UniversitySelect = ({
+export const UniversitySelect = ({
   label,
   value,
   options,
@@ -38,5 +38,3 @@ const UniversitySelect = ({
     </Box>
   )
 }
-
-export default UniversitySelect

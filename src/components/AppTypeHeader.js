@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Heading } from 'grommet'
-const AppTypeHeader = ({ appType }) => {
+export const AppTypeHeader = ({ appType }) => {
   return (
     <Box
       pad={{ horizontal: 'medium', vertical: 'small' }}
@@ -19,5 +19,3 @@ const AppTypeHeader = ({ appType }) => {
     </Box>
   )
 }
-
-export default AppTypeHeader

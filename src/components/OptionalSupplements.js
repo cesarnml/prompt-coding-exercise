@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, Text } from 'grommet'
 
-const OptionalSupplements = ({ appType, supplements }) => {
+export const OptionalSupplements = ({ appType, supplements }) => {
   const [show, setShow] = useState(false)
   return (
     <Box>
@@ -42,5 +42,3 @@ const OptionalSupplements = ({ appType, supplements }) => {
     </Box>
   )
 }
-
-export default OptionalSupplements

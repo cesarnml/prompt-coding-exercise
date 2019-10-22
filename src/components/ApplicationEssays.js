@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import { Box, Text } from 'grommet'
 
-const ApplicationEssays = ({ appType, applications, application_essays }) => {
+export const ApplicationEssays = ({
+  appType,
+  applications,
+  application_essays,
+}) => {
   const [show, setShow] = useState(false)
 
   return (
@@ -39,5 +43,3 @@ const ApplicationEssays = ({ appType, applications, application_essays }) => {
     </Box>
   )
 }
-
-export default ApplicationEssays

@@ -1,16 +1,18 @@
 import React from 'react'
 import { Box, Heading } from 'grommet'
-import ProgramDetails from './ProgramDetails'
-import ApplicationEssays from './ApplicationEssays'
-import RequiredSupplements from './RequiredSupplements'
-import OptionalSupplements from './OptionalSupplements'
-import AppTypeHeader from './AppTypeHeader'
+import {
+  ProgramDetails,
+  ApplicationEssays,
+  RequiredSupplements,
+  OptionalSupplements,
+  AppTypeHeader,
+} from 'components'
 
 const countPrograms = programs => {
   return !!programs.filter(prog => !!prog.supplements.length).length
 }
 
-const UniversityDetails = ({ label, university }) => {
+export const UniversityDetails = ({ label, university }) => {
   const {
     name,
     applications,
@@ -48,5 +50,3 @@ const UniversityDetails = ({ label, university }) => {
     </Box>
   )
 }
-
-export default UniversityDetails

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Heading, Text } from 'grommet'
-const ProgramDetails = ({ label, programs }) => {
+
+export const ProgramDetails = ({ label, programs }) => {
   return (
     <Box margin={{ bottom: 'xlarge' }} width='large' elevation='small'>
       <Box
@@ -34,5 +35,3 @@ const ProgramDetails = ({ label, programs }) => {
     </Box>
   )
 }
-
-export default ProgramDetails
