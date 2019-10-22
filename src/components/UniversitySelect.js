@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Select, Heading } from 'grommet'
+import { Box, Select, Text } from 'grommet'
 
 const UniversitySelect = ({
   label,
@@ -11,9 +11,12 @@ const UniversitySelect = ({
 }) => {
   return (
     <Box margin='small' pad='medium' align='start' border={{ color: 'red' }}>
-      <Heading level='2'>{label}</Heading>
+      <Text as='label' htmlFor='university-select'>
+        {label}
+      </Text>
       <Box width='medium'>
         <Select
+          id='university-select'
           size='medium'
           dropHeight='medium'
           placeholder='MIT'
