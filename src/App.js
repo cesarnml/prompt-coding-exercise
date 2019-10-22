@@ -23,8 +23,11 @@ const App = () => {
       const { data: universities } = await getUniversities()
       const universityNames = universities.map(ele => ele.name)
       setObjects(
-        universities.map(ele => ({ value: ele.iped, label: ele.name }))
+        universities.reduce((acc, cur) => {
+          return { ...acc, ...{ [cur.name]: cur.iped } }
+        }, {})
       )
+
       setDefaults(universityNames)
       setOptions(universityNames)
     }
@@ -38,7 +41,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (value && objects.length) {
+    if (value && Object.keys(objects).length) {
       const fetchUniversity = async iped => {
         const config = {
           headers: {
@@ -64,7 +67,8 @@ const App = () => {
         setUniversity(university)
       }
       //TODO: Consider optimizing
-      const iped = objects.find(obj => obj.label === value).value
+      //# O(N) to O(1) ... optimization success
+      const iped = objects[value]
       fetchUniversity(iped)
     }
   }, [value, objects])
