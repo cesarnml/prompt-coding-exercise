@@ -197,7 +197,9 @@ export const Supplements = ({ appType, label, supplements }) => {
                                     <CheckBox
                                       checked={checked[idx]}
                                       label={stripHtml(prompt)}
-                                      onChange={e =>setChecked(e.target.checked)}
+                                      onChange={e =>
+                                        setChecked(e.target.checked)
+                                      }
                                     />
                                   </Box>
                                 ))}
@@ -209,7 +211,12 @@ export const Supplements = ({ appType, label, supplements }) => {
                     </Box>
                     <Box as='ul'>
                       {essay.prompts.map(({ prompt }) => (
-                        <Text size='16px'>{stripHtml(prompt)}</Text>
+                        <Box as='li' key={prompt}>
+                          <Text
+                            size='16px'
+                            dangerouslySetInnerHTML={{ __html: prompt }}
+                          />
+                        </Box>
                       ))}
                     </Box>
                   </Box>

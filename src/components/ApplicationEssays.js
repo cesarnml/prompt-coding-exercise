@@ -4,7 +4,7 @@ import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 export const ApplicationEssays = ({ appType, application_essays }) => {
   const [show, setShow] = useState(false)
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState(null)
 
   const [isModal, setModal] = useState(
     Array(application_essays.length).fill(false)
@@ -19,6 +19,7 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
   const sorted_essays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
+  console.log('checked', checked)
   return (
     <Box>
       <Box
@@ -132,13 +133,15 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                               size='xsmall'
                               icon={<Edit size='small' />}
                               label='Select Prompt'
-                              onClick={() =>
+                              onClick={e => {
+                                console.log('EVENT OPEN', e.target)
+
                                 setModal(prev =>
                                   prev.map((ele, idx) =>
                                     index === idx ? true : ele
                                   )
                                 )
-                              }
+                              }}
                               gap='small'
                               reverse
                               hoverIndicator='true'
@@ -146,13 +149,14 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                             />
                             {isModal[index] && (
                               <Layer
-                                onEsc={() =>
+                                onEsc={e => {
+                                  console.log(e)
                                   setModal(prev =>
                                     prev.map((ele, idx) =>
                                       index === idx ? false : ele
                                     )
                                   )
-                                }
+                                }}
                                 onClickOutside={() =>
                                   setModal(prev =>
                                     prev.map((ele, idx) =>
@@ -168,6 +172,7 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                 >
                                   <Button
                                     label='close'
+                                    color='#2DA7A4'
                                     onClick={() =>
                                       setModal(prev =>
                                         prev.map((ele, idx) =>
@@ -179,14 +184,19 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                 </Box>
 
                                 <Box as='ul' pad='medium'>
-                                  {essay.prompts.map(({ prompt }) => (
-                                    <Box margin={{ bottom: 'medium' }}>
+                                  {essay.prompts.map(({ prompt }, idx) => (
+                                    <Box
+                                      margin={{ bottom: 'medium' }}
+                                      key={prompt}
+                                    >
                                       <CheckBox
-                                        checked={checked}
+                                        id={String(idx)}
+                                        checked={Number(checked) === idx}
                                         label={stripHtml(prompt)}
-                                        onChange={e =>
-                                          setChecked(e.target.checked)
-                                        }
+                                        onChange={e => {
+                                          console.log('CHECK E', e.target.id)
+                                          setChecked(e.target.id)
+                                        }}
                                       />
                                     </Box>
                                   ))}
@@ -197,13 +207,18 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                         ) : null}
                       </Box>
                       <Box as='ul'>
-                        {essay.prompts.map(({ prompt }) => (
-                          <Box
-                            as='li'
-                            key={prompt}
-                            margin={{ bottom: 'small' }}
-                          >
-                            <Text size='16px'>{stripHtml(prompt)}</Text>
+                        {essay.prompts.map(({ prompt }, idx) => (
+                          <Box as='li' key={prompt}>
+                            <Text
+                              size='16px'
+                              style={{
+                                fontWeight:
+                                  Number(checked) === idx ? 'bold' : 'normal',
+                                color:
+                                  Number(checked) === idx ? '#2DA7A4' : 'black',
+                              }}
+                              dangerouslySetInnerHTML={{ __html: prompt }}
+                            />
                           </Box>
                         ))}
                       </Box>
