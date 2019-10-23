@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Text } from 'grommet'
-import { Down, Up } from 'grommet-icons'
+import { Box, Text, Button, CheckBox, Layer } from 'grommet'
+import { Down, Up, Edit } from 'grommet-icons'
+import { stripHtml } from 'utils'
 
 export const Supplements = ({ appType, label, supplements }) => {
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
+  const [checked, setChecked] = useState(false)
+
+  const [isModal, setModal] = useState(Array(supplements.length).fill(false))
+
   useEffect(() => {
     setShow(false)
     setHover(false)
+    setModal(Array(supplements.length).fill(false))
   }, [supplements])
   return (
     <Box>
@@ -56,7 +62,7 @@ export const Supplements = ({ appType, label, supplements }) => {
               label === 'Required' ? !supp.optional : supp.optional
             )
             .filter(supp => supp.applications.includes(appType))
-            .map(essay => (
+            .map((essay, index) => (
               <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                 {!!essay.instructions && (
                   <Box margin={{ bottom: 'medium', horizontal: 'medium' }}>
@@ -67,14 +73,7 @@ export const Supplements = ({ appType, label, supplements }) => {
                     >
                       Instructions:
                     </Text>
-                    <Text
-                      margin={
-                        essay.instructions.includes('<p>')
-                          ? { top: '-20px' }
-                          : 'none'
-                      }
-                      dangerouslySetInnerHTML={{ __html: essay.instructions }}
-                    />
+                    <Text size='16px'>{stripHtml(essay.instructions)}</Text>
                   </Box>
                 )}
                 <Box
@@ -104,6 +103,7 @@ export const Supplements = ({ appType, label, supplements }) => {
                   <Box width='large'>
                     <Box
                       direction='row'
+                      justify='between'
                       align='center'
                       border={{
                         side: 'bottom',
@@ -112,34 +112,104 @@ export const Supplements = ({ appType, label, supplements }) => {
                       }}
                       margin={{ bottom: 'small' }}
                     >
-                      <Text weight='bold' size='16px'>
-                        {essay.name}
-                      </Text>
-                      <Box
-                        margin={{ left: 'small' }}
-                        height='16px'
-                        justify='center'
-                        background='#2DA7A4'
-                        round='small'
-                        pad={{ horizontal: 'xsmall' }}
-                      >
-                        <Text color='white' weight='bold' size='xsmall'>
-                          {essay.last_updated === new Date().getFullYear()
-                            ? 'Current'
-                            : essay.last_updated}
+                      <Box direction='row'>
+                        <Text weight='bold' size='16px' truncate>
+                          {essay.name}
                         </Text>
+                        <Box
+                          margin={{ left: 'small' }}
+                          height='16px'
+                          justify='center'
+                          background='#2DA7A4'
+                          round='small'
+                          pad={{ horizontal: 'xsmall' }}
+                        >
+                          <Text color='white' weight='bold' size='xsmall'>
+                            {essay.last_updated === new Date().getFullYear()
+                              ? 'Current'
+                              : essay.last_updated}
+                          </Text>
+                        </Box>
                       </Box>
+                      {essay.prompts.length > 1 ? (
+                        <Box
+                          height='16px'
+                          justify='center'
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <Button
+                            plain
+                            pad='none'
+                            size='xsmall'
+                            icon={<Edit size='small' />}
+                            label='Select Prompt'
+                            gap='small'
+                            reverse
+                            onClick={() =>
+                              setModal(prev =>
+                                prev.map((ele, idx) =>
+                                  index === idx ? true : ele
+                                )
+                              )
+                            }
+                            hoverIndicator='true'
+                            style={{ fontSize: '12px', fontWeight: 'bold' }}
+                          />
+                          {isModal[index] && (
+                            <Layer
+                              onEsc={() =>
+                                setModal(prev =>
+                                  prev.map((ele, idx) =>
+                                    index === idx ? false : ele
+                                  )
+                                )
+                              }
+                              onClickOutside={() =>
+                                setModal(prev =>
+                                  prev.map((ele, idx) =>
+                                    index === idx ? false : ele
+                                  )
+                                )
+                              }
+                            >
+                              <Box
+                                width='xsmall'
+                                alignSelf='end'
+                                margin='small'
+                              >
+                                <Button
+                                  label='close'
+                                  onClick={() =>
+                                    setModal(prev =>
+                                      prev.map((ele, idx) =>
+                                        index === idx ? false : ele
+                                      )
+                                    )
+                                  }
+                                />
+                              </Box>
+                              <Box as='ul' pad='medium'>
+                                {essay.prompts.map(({ prompt }, idx) => (
+                                  <Box
+                                    margin={{ bottom: 'medium' }}
+                                    justify='start'
+                                  >
+                                    <CheckBox
+                                      checked={checked[idx]}
+                                      label={stripHtml(prompt)}
+                                      onChange={e =>setChecked(e.target.checked)}
+                                    />
+                                  </Box>
+                                ))}
+                              </Box>
+                            </Layer>
+                          )}
+                        </Box>
+                      ) : null}
                     </Box>
                     <Box as='ul'>
                       {essay.prompts.map(({ prompt }) => (
-                        <Box
-                          margin={
-                            prompt.includes('<p>') ? { top: '-20px' } : 'none'
-                          }
-                          dangerouslySetInnerHTML={{ __html: prompt }}
-                          as='li'
-                          key={prompt}
-                        />
+                        <Text size='16px'>{stripHtml(prompt)}</Text>
                       ))}
                     </Box>
                   </Box>

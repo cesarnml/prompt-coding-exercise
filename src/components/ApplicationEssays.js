@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Text } from 'grommet'
-import { Down, Up } from 'grommet-icons'
-export const ApplicationEssays = ({
-  appType,
-  application_essays,
-}) => {
+import { Box, Text, Button, Layer, CheckBox } from 'grommet'
+import { Down, Up, Edit } from 'grommet-icons'
+import { stripHtml } from 'utils'
+export const ApplicationEssays = ({ appType, application_essays }) => {
   const [show, setShow] = useState(false)
+  const [checked, setChecked] = useState(false)
+
+  const [isModal, setModal] = useState(
+    Array(application_essays.length).fill(false)
+  )
   const [isHover, setHover] = useState(false)
 
   useEffect(() => {
     setShow(false)
     setHover(false)
+    setModal(Array(application_essays.length).fill(false))
   }, [application_essays])
   const sorted_essays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
@@ -47,7 +51,7 @@ export const ApplicationEssays = ({
       {show && (
         <Box as='ul' margin={{ bottom: 'medium' }}>
           {appType === 'Common App'
-            ? sorted_essays.map(essay => (
+            ? sorted_essays.map((essay, index) => (
                 <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
                     <Box margin={{ bottom: 'medium', horizontal: 'medium' }}>
@@ -88,6 +92,7 @@ export const ApplicationEssays = ({
                     <Box width='large'>
                       <Box
                         direction='row'
+                        justify='between'
                         align='center'
                         border={{
                           side: 'bottom',
@@ -96,34 +101,110 @@ export const ApplicationEssays = ({
                         }}
                         margin={{ bottom: 'small' }}
                       >
-                        <Text weight='bold' size='16px'>
-                          {essay.name}
-                        </Text>
-                        <Box
-                          margin={{ left: 'small' }}
-                          height='16px'
-                          justify='center'
-                          background='#2DA7A4'
-                          round='small'
-                          pad={{ horizontal: 'xsmall' }}
-                        >
-                          <Text color='white' weight='bold' size='xsmall'>
-                            {essay.last_updated === new Date().getFullYear()
-                              ? 'Current'
-                              : essay.last_updated}
+                        <Box direction='row'>
+                          <Text weight='bold' size='16px' truncate>
+                            {essay.name}
                           </Text>
+                          <Box
+                            margin={{ left: 'small' }}
+                            height='16px'
+                            justify='center'
+                            background='#2DA7A4'
+                            round='small'
+                            pad={{ horizontal: 'xsmall' }}
+                          >
+                            <Text color='white' weight='bold' size='xsmall'>
+                              {essay.last_updated === new Date().getFullYear()
+                                ? 'Current'
+                                : essay.last_updated}
+                            </Text>
+                          </Box>
                         </Box>
+                        {essay.prompts.length > 1 ? (
+                          <Box
+                            height='16px'
+                            justify='center'
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <Button
+                              plain
+                              pad='none'
+                              size='xsmall'
+                              icon={<Edit size='small' />}
+                              label='Select Prompt'
+                              onClick={() =>
+                                setModal(prev =>
+                                  prev.map((ele, idx) =>
+                                    index === idx ? true : ele
+                                  )
+                                )
+                              }
+                              gap='small'
+                              reverse
+                              hoverIndicator='true'
+                              style={{ fontSize: '12px', fontWeight: 'bold' }}
+                            />
+                            {isModal[index] && (
+                              <Layer
+                                onEsc={() =>
+                                  setModal(prev =>
+                                    prev.map((ele, idx) =>
+                                      index === idx ? false : ele
+                                    )
+                                  )
+                                }
+                                onClickOutside={() =>
+                                  setModal(prev =>
+                                    prev.map((ele, idx) =>
+                                      index === idx ? false : ele
+                                    )
+                                  )
+                                }
+                              >
+                                <Box
+                                  width='xsmall'
+                                  alignSelf='end'
+                                  margin='small'
+                                >
+                                  <Button
+                                    label='close'
+                                    onClick={() =>
+                                      setModal(prev =>
+                                        prev.map((ele, idx) =>
+                                          index === idx ? false : ele
+                                        )
+                                      )
+                                    }
+                                  />
+                                </Box>
+
+                                <Box as='ul' pad='medium'>
+                                  {essay.prompts.map(({ prompt }) => (
+                                    <Box margin={{ bottom: 'medium' }}>
+                                      <CheckBox
+                                        checked={checked}
+                                        label={stripHtml(prompt)}
+                                        onChange={e =>
+                                          setChecked(e.target.checked)
+                                        }
+                                      />
+                                    </Box>
+                                  ))}
+                                </Box>
+                              </Layer>
+                            )}
+                          </Box>
+                        ) : null}
                       </Box>
                       <Box as='ul'>
                         {essay.prompts.map(({ prompt }) => (
                           <Box
-                            margin={
-                              prompt.includes('<p>') ? { top: '-20px' } : 'none'
-                            }
                             as='li'
                             key={prompt}
-                            dangerouslySetInnerHTML={{ __html: prompt }}
-                          />
+                            margin={{ bottom: 'small' }}
+                          >
+                            <Text size='16px'>{stripHtml(prompt)}</Text>
+                          </Box>
                         ))}
                       </Box>
                     </Box>

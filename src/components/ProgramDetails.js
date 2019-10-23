@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Heading, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
+import { stripHtml } from 'utils'
 
 //TODO: Fix hard-coded "All Applications"
 
@@ -127,15 +128,9 @@ export const ProgramDetails = ({ label, programs }) => {
                     </Box>
                     <Box>
                       {supp.prompts.map(({ prompt }) => (
-                        <Box
-                          margin={
-                            prompt.includes('<p>') ? { top: '-20px' } : 'none'
-                          }
-                          as='li'
-                          key={prompt}
-                          size='16px'
-                          dangerouslySetInnerHTML={{ __html: prompt }}
-                        />
+                        <Box as='li' key={prompt} margin={{ bottom: 'small' }}>
+                          <Text size='16px'>{stripHtml(prompt)}</Text>
+                        </Box>
                       ))}
                     </Box>
                   </Box>
