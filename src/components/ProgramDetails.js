@@ -4,6 +4,7 @@ import { Down, Up } from 'grommet-icons'
 
 export const ProgramDetails = ({ label, programs }) => {
   const [show, setShow] = useState(Array(programs.length).fill(false))
+  const [isHover, setHover] = useState(Array(programs.length).fill(false))
   return (
     <Box margin={{ bottom: 'xlarge' }} width='large' elevation='small'>
       <Box
@@ -21,18 +22,29 @@ export const ProgramDetails = ({ label, programs }) => {
       </Box>
 
       {programs.map((prog, index) => (
-        <Box>
+        <Box key={prog.name}>
           <Box
+            style={{ cursor: 'pointer' }}
             as='h4'
             direction='row'
             justify='between'
             pad='medium'
-            key={prog.name}
             onClick={() =>
               setShow(prev =>
                 prev.map((ele, idx) => (idx === index ? !ele : ele))
               )
             }
+            background={isHover[index] ? '#C7E9E5' : 'none'}
+            onMouseEnter={() => {
+              setHover(prev =>
+                prev.map((ele, idx) => (index === idx ? true : false))
+              )
+            }}
+            onMouseLeave={() => {
+              setHover(prev =>
+                prev.map((ele, idx) => (index === idx ? false : ele))
+              )
+            }}
           >
             <Box direction='row' align='center'>
               {show[index] ? <Up size='small' /> : <Down size='small' />}
@@ -47,7 +59,7 @@ export const ProgramDetails = ({ label, programs }) => {
           {show[index] && (
             <Box pad='medium' margin={{ horizontal: 'medium' }}>
               {prog.supplements.map(supp => (
-                <Box direction='row'>
+                <Box direction='row' key={supp.name}>
                   <Box width='small' margin={{ right: 'medium' }}>
                     <Box
                       direction='row'
