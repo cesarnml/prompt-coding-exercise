@@ -195,11 +195,10 @@ export const Supplements = ({ appType, label, supplements }) => {
                                     justify='start'
                                   >
                                     <CheckBox
-                                      checked={checked[idx]}
+                                      id={idx}
+                                      checked={Number(checked) === idx}
                                       label={stripHtml(prompt)}
-                                      onChange={e =>
-                                        setChecked(e.target.checked)
-                                      }
+                                      onChange={e => setChecked(e.target.id)}
                                     />
                                   </Box>
                                 ))}
@@ -210,9 +209,23 @@ export const Supplements = ({ appType, label, supplements }) => {
                       ) : null}
                     </Box>
                     <Box as='ul'>
-                      {essay.prompts.map(({ prompt }) => (
+                      {essay.prompts.map(({ prompt }, idx) => (
                         <Box as='li' key={prompt}>
                           <Text
+                            style={
+                              essay.prompts.length > 1
+                                ? {
+                                    fontWeight:
+                                      Number(checked) === idx
+                                        ? 'bold'
+                                        : 'normal',
+                                    color:
+                                      Number(checked) === idx
+                                        ? '#2DA7A4'
+                                        : 'black',
+                                  }
+                                : {}
+                            }
                             size='16px'
                             dangerouslySetInnerHTML={{ __html: prompt }}
                           />
