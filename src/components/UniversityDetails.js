@@ -21,7 +21,7 @@ export const UniversityDetails = ({ label, university }) => {
   } = university
 
   return (
-    <Box align='start' margin='small' pad='medium' border={{ color: 'green' }}>
+    <Box align='start' margin='small' pad='medium'>
       <Heading level='3'>{`${label} - ${name}`}</Heading>
       {applications.map(appType => (
         <Box

@@ -10,7 +10,7 @@ export const UniversitySelect = ({
   setOptions,
 }) => {
   return (
-    <Box margin='small' pad='medium' align='start' border={{ color: 'red' }}>
+    <Box margin='small' pad='medium' align='start'>
       <Text as='label' htmlFor='university-select'>
         {label}
       </Text>
