@@ -3,36 +3,38 @@ import {
   Box,
   Text,
   Button,
-  Layer,
   CheckBox,
-  TextArea,
+  Layer,
   Form,
   FormField,
+  TextArea,
 } from 'grommet'
 import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
-export const ApplicationEssays = ({ appType, application_essays }) => {
+
+export const ApplicationEssays = ({ appType, label, application_essays }) => {
   const [show, setShow] = useState(false)
+  const [isHover, setHover] = useState(false)
   const [hash, setHash] = useState({})
   const [textArea, setTextArea] = useState('')
   const [edit, setEdit] = useState(null)
   const [isModal, setModal] = useState(
     Array(application_essays.length).fill(false)
   )
-  const [isHover, setHover] = useState(false)
-  const value = useContext(UniContext)
+  const { setUniversity } = useContext(UniContext)
 
   useEffect(() => {
     setHover(false)
+    setHash({})
     setEdit(null)
     setModal(Array(application_essays.length).fill(false))
-    setHash({})
   }, [application_essays])
 
-  const sorted_essays = [...application_essays].sort(
+  const sortedEssays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
+
   return (
     <Box>
       <Box
@@ -42,16 +44,17 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
         background={isHover ? '#C7E9E5' : 'none'}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        pad='medium'
         onClick={() => setShow(prev => !prev)}
+        pad='medium'
         style={{ cursor: 'pointer' }}
       >
         <Box direction='row' align='center'>
           {show ? <Up size='small' /> : <Down size='small' />}
           <Text margin={{ left: 'small' }} size='16px' weight='normal'>
-            Application Essays
+            {label}
           </Text>
         </Box>
+        {/* change what gets rendered based on label */}
         <Box width='90px'>
           <Text size='16px' weight='normal'>{`${
             appType === 'Common App' || appType === 'UC App'
@@ -68,14 +71,14 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
       {show && (
         <Box as='ul' margin={{ bottom: 'medium' }}>
           {appType === 'Common App' || appType === 'UC App'
-            ? sorted_essays.map((essay, index) => (
-                <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
+            ? sortedEssays.map((essay, index) => (
+                <Box as='li' key={index} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
                     <Box margin={{ bottom: 'medium', horizontal: 'medium' }}>
                       <Text
+                        size='16px'
                         weight='bold'
                         margin={{ bottom: 'small' }}
-                        size='16px'
                       >
                         Instructions:
                       </Text>
@@ -152,6 +155,8 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                               size='xsmall'
                               icon={<Edit size='small' />}
                               label='Select Prompt'
+                              gap='small'
+                              reverse
                               onClick={e => {
                                 setModal(prev =>
                                   prev.map((ele, idx) =>
@@ -159,20 +164,18 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                   )
                                 )
                               }}
-                              gap='small'
-                              reverse
                               hoverIndicator='true'
                               style={{ fontSize: '12px', fontWeight: 'bold' }}
                             />
                             {isModal[index] && (
                               <Layer
-                                onEsc={e => {
+                                onEsc={e => 
                                   setModal(prev =>
                                     prev.map((ele, idx) =>
                                       index === idx ? false : ele
                                     )
                                   )
-                                }}
+                                }
                                 onClickOutside={() =>
                                   setModal(prev =>
                                     prev.map((ele, idx) =>
@@ -280,7 +283,7 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                       return ess
                                     }
                                   )
-                                  value.setUniversity(prev => ({
+                                  setUniversity(prev => ({
                                     ...prev,
                                     application_essays: copyEssays,
                                   }))

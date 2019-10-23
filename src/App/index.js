@@ -20,9 +20,10 @@ const App = () => {
       const universityNames = universities.map(ele => ele.name)
 
       setHash(
-        universities.reduce((acc, cur) => {
-          return { ...acc, ...{ [cur.name]: cur.iped } }
-        }, {})
+        universities.reduce(
+          (acc, cur) => ({ ...acc, [cur.name]: cur.iped }),
+          {}
+        )
       )
       setDefaults(universityNames)
       setOptions(universityNames)
@@ -68,24 +69,24 @@ const App = () => {
   }, [value, hash])
 
   return (
-    <UniContext.Provider value={{ setUniversity }}>
-      <Grommet full theme={grommet}>
-        <UniversitySelect
-          label='Select a university'
-          value={value}
-          options={options}
-          defaults={defaults}
-          setValue={setValue}
-          setOptions={setOptions}
-        />
+    <Grommet full theme={grommet}>
+      <UniversitySelect
+        label='Select a university'
+        value={value}
+        options={options}
+        defaults={defaults}
+        setValue={setValue}
+        setOptions={setOptions}
+      />
+      <UniContext.Provider value={{ setUniversity }}>
         {!isEmpty(university) && (
           <UniversityDetails
             label='Essay Requirements'
             university={university}
           />
         )}
-      </Grommet>
-    </UniContext.Provider>
+      </UniContext.Provider>
+    </Grommet>
   )
 }
 export default App

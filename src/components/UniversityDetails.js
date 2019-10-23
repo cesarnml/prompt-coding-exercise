@@ -1,10 +1,10 @@
 import React from 'react'
 import { Box, Heading } from 'grommet'
 import {
-  ProgramDetails,
+  AppTypeHeader,
   ApplicationEssays,
   Supplements,
-  AppTypeHeader,
+  ProgramDetails,
 } from 'components'
 
 const hasPrograms = programs => {
@@ -40,15 +40,16 @@ export const UniversityDetails = ({ label, university }) => {
           <AppTypeHeader appType={appType} />
           <ApplicationEssays
             appType={appType}
+            label='Application Essays'
             application_essays={application_essays}
           />
           <Supplements
-            label='Required'
+            label='Required Supplements'
             appType={appType}
             supplements={supplements}
           />
           <Supplements
-            label='Optional'
+            label='Optional Supplements'
             appType={appType}
             supplements={supplements}
           />
