@@ -11,7 +11,7 @@ export const UniversitySelect = ({
 }) => {
   return (
     <Box margin='small' pad='medium' align='start'>
-      <Text as='label' htmlFor='university-select'>
+      <Text as='label' htmlFor='university-select' weight='600'>
         {label}
       </Text>
       <Box width='medium'>

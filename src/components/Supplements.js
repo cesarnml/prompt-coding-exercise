@@ -117,7 +117,7 @@ export const Supplements = ({ appType, label, supplements }) => {
                       </Text>
                       <Box
                         margin={{ left: 'small' }}
-                        height='18px'
+                        height='16px'
                         justify='center'
                         background='#2DA7A4'
                         round='small'

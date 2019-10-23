@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Box, Heading, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 
+//TODO: Fix hard-coded "All Applications"
+
 export const ProgramDetails = ({ label, programs }) => {
   const [show, setShow] = useState(Array(programs.length).fill(false))
   const [isHover, setHover] = useState(Array(programs.length).fill(false))
@@ -22,7 +24,7 @@ export const ProgramDetails = ({ label, programs }) => {
           color: 'black',
         }}
       >
-        <Heading level='3' margin='0'>
+        <Heading level='4' margin='0'>
           {label}
         </Heading>
       </Box>
@@ -67,7 +69,11 @@ export const ProgramDetails = ({ label, programs }) => {
           {show[index] && (
             <Box pad='medium' margin={{ horizontal: 'medium' }}>
               {prog.supplements.map(supp => (
-                <Box direction='row' key={supp.name}>
+                <Box
+                  direction='row'
+                  key={supp.name}
+                  margin={{ bottom: 'medium' }}
+                >
                   <Box width='small' margin={{ right: 'medium' }}>
                     <Box
                       direction='row'
@@ -87,6 +93,7 @@ export const ProgramDetails = ({ label, programs }) => {
                     <Text size='16px'>
                       {supp.optional ? 'Optional' : 'Required'}
                     </Text>
+
                     <Text size='16px'>All Applications</Text>
                   </Box>
                   <Box width='large'>
@@ -100,9 +107,23 @@ export const ProgramDetails = ({ label, programs }) => {
                       }}
                       margin={{ bottom: 'small' }}
                     >
-                      <Text weight='bold' size='16px'>
+                      <Text weight='bold' size='16px' truncate>
                         {supp.name}
                       </Text>
+                      <Box
+                        margin={{ left: 'small' }}
+                        height='16px'
+                        justify='center'
+                        background='#2DA7A4'
+                        round='small'
+                        pad={{ horizontal: 'xsmall' }}
+                      >
+                        <Text color='white' weight='bold' size='xsmall'>
+                          {supp.last_updated === new Date().getFullYear()
+                            ? 'Current'
+                            : supp.last_updated}
+                        </Text>
+                      </Box>
                     </Box>
                     <Box>
                       {supp.prompts.map(({ prompt }) => (

@@ -3,7 +3,6 @@ import { Box, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 export const ApplicationEssays = ({
   appType,
-  applications,
   application_essays,
 }) => {
   const [show, setShow] = useState(false)
@@ -102,7 +101,7 @@ export const ApplicationEssays = ({
                         </Text>
                         <Box
                           margin={{ left: 'small' }}
-                          height='18px'
+                          height='16px'
                           justify='center'
                           background='#2DA7A4'
                           round='small'

@@ -11,7 +11,7 @@ export const AppTypeHeader = ({ appType }) => {
         color: 'black',
       }}
     >
-      <Heading level='3' margin='0'>
+      <Heading level='4' margin='0'>
         {appType === 'University Application'
           ? 'University-Specific Application'
           : appType}

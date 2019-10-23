@@ -21,8 +21,15 @@ export const UniversityDetails = ({ label, university }) => {
   } = university
 
   return (
-    <Box align='start' margin='small' pad='medium'>
-      <Heading level='3'>{`${label} - ${name}`}</Heading>
+    <Box
+      align='start'
+      margin={{ bottom: 'small', horizontal: 'small' }}
+      pad={{ bottom: 'medium', horizontal: 'medium' }}
+    >
+      <Heading
+        level='3'
+        margin={{ top: 'none' }}
+      >{`${label} - ${name}`}</Heading>
       {applications.map(appType => (
         <Box
           key={appType}
@@ -33,7 +40,6 @@ export const UniversityDetails = ({ label, university }) => {
           <AppTypeHeader appType={appType} />
           <ApplicationEssays
             appType={appType}
-            applications={applications}
             application_essays={application_essays}
           />
           <Supplements
