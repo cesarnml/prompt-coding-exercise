@@ -189,16 +189,16 @@ export const Supplements = ({ appType, label, supplements }) => {
                                 />
                               </Box>
                               <Box as='ul' pad='medium'>
-                                {essay.prompts.map(({ prompt }, idx) => (
+                                {essay.prompts.map(({ prompt }, slug) => (
                                   <Box
                                     margin={{ bottom: 'medium' }}
                                     justify='start'
                                   >
                                     <CheckBox
-                                      id={idx}
-                                      checked={Number(checked) === idx}
+                                      value={slug}
+                                      checked={checked === slug}
                                       label={stripHtml(prompt)}
-                                      onChange={e => setChecked(e.target.id)}
+                                      onChange={e => setChecked(e.target.value)}
                                     />
                                   </Box>
                                 ))}
@@ -209,20 +209,16 @@ export const Supplements = ({ appType, label, supplements }) => {
                       ) : null}
                     </Box>
                     <Box as='ul'>
-                      {essay.prompts.map(({ prompt }, idx) => (
+                      {essay.prompts.map(({ prompt }, slug) => (
                         <Box as='li' key={prompt}>
                           <Text
                             style={
                               essay.prompts.length > 1
                                 ? {
                                     fontWeight:
-                                      Number(checked) === idx
-                                        ? 'bold'
-                                        : 'normal',
+                                      checked === slug ? 'bold' : 'normal',
                                     color:
-                                      Number(checked) === idx
-                                        ? '#2DA7A4'
-                                        : 'black',
+                                      checked === slug ? '#2DA7A4' : 'black',
                                   }
                                 : {}
                             }
