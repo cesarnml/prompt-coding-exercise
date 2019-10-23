@@ -30,9 +30,9 @@ export const UniversityDetails = ({ label, university }) => {
         level='3'
         margin={{ top: 'none' }}
       >{`${label} - ${name}`}</Heading>
-      {applications.map(appType => (
+      {applications.map((appType, i) => (
         <Box
-          key={appType}
+          key={i}
           margin={{ bottom: 'xlarge' }}
           width='large'
           elevation='small'

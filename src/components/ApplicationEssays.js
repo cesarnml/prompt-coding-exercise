@@ -24,7 +24,6 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
   const value = useContext(UniContext)
 
   useEffect(() => {
-    setShow(false)
     setHover(false)
     setEdit(null)
     setModal(Array(application_essays.length).fill(false))
@@ -105,6 +104,9 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                         {essay.display_length.includes('words')
                           ? `${essay.display_length} max`
                           : essay.display_length}
+                      </Text>
+                      <Text size='16px'>
+                        {essay.optional ? 'Optional' : 'Required'}
                       </Text>
                     </Box>
                     <Box width='large'>
@@ -198,11 +200,8 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                 </Box>
 
                                 <Box as='ul' pad='medium'>
-                                  {essay.prompts.map(({ prompt, slug }) => (
-                                    <Box
-                                      margin={{ bottom: 'medium' }}
-                                      key={prompt}
-                                    >
+                                  {essay.prompts.map(({ prompt, slug }, i) => (
+                                    <Box margin={{ bottom: 'medium' }} key={i}>
                                       <CheckBox
                                         data-essay={essay.slug}
                                         value={slug}
@@ -226,10 +225,10 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                         ) : null}
                       </Box>
                       <Box as='ul'>
-                        {essay.prompts.map(({ prompt, slug }) => (
+                        {essay.prompts.map(({ prompt, slug }, i) => (
                           <Box
                             as='li'
-                            key={prompt}
+                            key={i}
                             data-slug={slug}
                             onClick={e => {
                               setTextArea(stripHtml(prompt))
@@ -250,8 +249,9 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                           hash[essay.slug] === slug
                                             ? '#2DA7A4'
                                             : 'black',
+                                        cursor: 'pointer',
                                       }
-                                    : {}
+                                    : { cursor: 'pointer' }
                                 }
                                 dangerouslySetInnerHTML={{ __html: prompt }}
                               />
