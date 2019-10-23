@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Text } from 'grommet'
+import { Down, Up } from 'grommet-icons'
 
 export const Supplements = ({ appType, label, supplements }) => {
   const [show, setShow] = useState(false)
@@ -18,22 +19,27 @@ export const Supplements = ({ appType, label, supplements }) => {
         onMouseLeave={() => setHover(false)}
         style={{ cursor: 'pointer' }}
       >
-        <Text>{`${label} Supplements`}</Text>
-        <Text>{`${
-          supplements
-            .filter(supp => supp.applications.includes(appType))
-            .filter(supp =>
-              label === 'Required' ? !supp.optional : supp.optional
-            ).length
-        } ${
-          supplements
-            .filter(supp => supp.applications.includes(appType))
-            .filter(supp =>
-              label === 'Required' ? !supp.optional : supp.optional
-            ).length > 1
-            ? 'Essays'
-            : 'Essay'
-        }`}</Text>
+        <Box direction='row' align='center'>
+          {show ? <Up size='small' /> : <Down size='small' />}
+          <Text margin={{ left: 'small' }}>{`${label} Supplements`}</Text>
+        </Box>
+        <Box width='90px'>
+          <Text>{`${
+            supplements
+              .filter(supp => supp.applications.includes(appType))
+              .filter(supp =>
+                label === 'Required' ? !supp.optional : supp.optional
+              ).length
+          } ${
+            supplements
+              .filter(supp => supp.applications.includes(appType))
+              .filter(supp =>
+                label === 'Required' ? !supp.optional : supp.optional
+              ).length > 1
+              ? 'Essays'
+              : 'Essay'
+          }`}</Text>
+        </Box>
       </Box>
 
       {show && (

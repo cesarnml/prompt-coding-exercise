@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Text } from 'grommet'
-
+import { Down, Up } from 'grommet-icons'
 export const ApplicationEssays = ({
   appType,
   applications,
@@ -25,22 +25,25 @@ export const ApplicationEssays = ({
         onClick={() => setShow(prev => !prev)}
         style={{ cursor: 'pointer' }}
       >
-        <Text>Application Essays</Text>
-        <Text>{`${appType === 'Common App' ? applications.length : '0'} ${
-          applications.length > 1 && appType === 'Common App'
-            ? 'Essays'
-            : 'Essay'
-        }`}</Text>
+        <Box direction='row' align='center'>
+          {show ? <Up size='small' /> : <Down size='small' />}
+          <Text margin={{ left: 'small' }}>Application Essays</Text>
+        </Box>
+        <Box width='90px'>
+          <Text>{`${appType === 'Common App' ? applications.length : '0'} ${
+            applications.length > 1 && appType === 'Common App'
+              ? 'Essays'
+              : 'Essay'
+          }`}</Text>
+        </Box>
       </Box>
       {show && (
         <Box as='ul' margin={{ bottom: 'medium' }}>
           {appType === 'Common App'
             ? sorted_essays.map(essay => (
                 <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
-                  <div>{console.log(essay.name)}</div>
-
                   {!!essay.instructions && (
-                    <Box margin={{ bottom: 'small' }}>
+                    <Box margin={{ bottom: 'small', horizontal: 'small' }}>
                       <Text weight='bold' margin={{ bottom: 'small' }}>
                         Instructions:
                       </Text>
@@ -48,7 +51,7 @@ export const ApplicationEssays = ({
                     </Box>
                   )}
                   <Box direction='row' justify='between'>
-                    <Box width='small' margin='small'>
+                    <Box width='small' margin={{ horizontal: 'small' }}>
                       <Box
                         border={{
                           side: 'bottom',
@@ -65,7 +68,7 @@ export const ApplicationEssays = ({
                           : essay.display_length}
                       </Text>
                     </Box>
-                    <Box width='large' margin={{ right: 'small' }}>
+                    <Box width='large' margin={{ horizontal: 'small' }}>
                       <Box
                         direction='row'
                         align='center'
