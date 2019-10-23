@@ -105,6 +105,9 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                           ? `${essay.display_length} max`
                           : essay.display_length}
                       </Text>
+                      <Text size='16px'>
+                        {essay.optional ? 'Optional' : 'Required'}
+                      </Text>
                     </Box>
                     <Box width='large'>
                       <Box
