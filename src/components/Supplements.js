@@ -52,7 +52,7 @@ export const Supplements = ({ appType, label, supplements }) => {
             .map(essay => (
               <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                 {!!essay.instructions && (
-                  <Box margin={{ bottom: 'small', horizontal: 'small' }}>
+                  <Box margin={{ bottom: 'small', horizontal: 'medium' }}>
                     <Text weight='bold' margin={{ bottom: 'small' }}>
                       Instructions:
                     </Text>
@@ -66,8 +66,12 @@ export const Supplements = ({ appType, label, supplements }) => {
                     />
                   </Box>
                 )}
-                <Box direction='row' justify='between'>
-                  <Box width='small' margin={{ horizontal: 'small' }}>
+                <Box
+                  direction='row'
+                  justify='between'
+                  margin={{ horizontal: 'medium' }}
+                >
+                  <Box width='small' margin={{ right: 'medium' }}>
                     <Box
                       border={{
                         side: 'bottom',
@@ -84,7 +88,7 @@ export const Supplements = ({ appType, label, supplements }) => {
                         : essay.display_length}
                     </Text>
                   </Box>
-                  <Box width='large' margin={{ horizontal: 'small' }}>
+                  <Box width='large'>
                     <Box
                       direction='row'
                       align='center'

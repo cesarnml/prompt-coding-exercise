@@ -7,7 +7,7 @@ import {
   AppTypeHeader,
 } from 'components'
 
-const countPrograms = programs => {
+const hasPrograms = programs => {
   return !!programs.filter(prog => !!prog.supplements.length).length
 }
 
@@ -48,7 +48,7 @@ export const UniversityDetails = ({ label, university }) => {
           />
         </Box>
       ))}
-      {countPrograms(programs) && (
+      {hasPrograms(programs) && (
         <ProgramDetails
           label='Programs, Majors, and Scholarships'
           programs={programs.filter(prog => !!prog.supplements.length)}

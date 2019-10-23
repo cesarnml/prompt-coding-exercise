@@ -43,15 +43,19 @@ export const ApplicationEssays = ({
             ? sorted_essays.map(essay => (
                 <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
-                    <Box margin={{ bottom: 'small', horizontal: 'small' }}>
+                    <Box margin={{ bottom: 'small', horizontal: 'medium' }}>
                       <Text weight='bold' margin={{ bottom: 'small' }}>
                         Instructions:
                       </Text>
                       <Text>{essay.instructions}</Text>
                     </Box>
                   )}
-                  <Box direction='row' justify='between'>
-                    <Box width='small' margin={{ horizontal: 'small' }}>
+                  <Box
+                    direction='row'
+                    justify='between'
+                    margin={{ horizontal: 'medium' }}
+                  >
+                    <Box width='small' margin={{ right: 'medium' }}>
                       <Box
                         border={{
                           side: 'bottom',
@@ -68,7 +72,7 @@ export const ApplicationEssays = ({
                           : essay.display_length}
                       </Text>
                     </Box>
-                    <Box width='large' margin={{ horizontal: 'small' }}>
+                    <Box width='large'>
                       <Box
                         direction='row'
                         align='center'
