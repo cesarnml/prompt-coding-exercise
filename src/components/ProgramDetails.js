@@ -15,7 +15,7 @@ export const ProgramDetails = ({ label, programs }) => {
           color: 'black',
         }}
       >
-        <Heading level='4' margin='0'>
+        <Heading level='3' margin='0'>
           {label}
         </Heading>
       </Box>
@@ -38,10 +38,11 @@ export const ProgramDetails = ({ label, programs }) => {
               {show[index] ? <Up size='small' /> : <Down size='small' />}
               <Text margin={{ left: 'small' }}>{prog.name}</Text>
             </Box>
-
-            <Text>{`${prog.supplements.length} ${
-              prog.supplements.length > 1 ? 'Essays' : 'Essay'
-            }`}</Text>
+            <Box width='90px'>
+              <Text>{`${prog.supplements.length} ${
+                prog.supplements.length > 1 ? 'Essays' : 'Essay'
+              }`}</Text>
+            </Box>
           </Box>
           {show[index] && (
             <Box pad='medium' margin={{ horizontal: 'medium' }}>
