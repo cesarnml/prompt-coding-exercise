@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 
 export const Supplements = ({ appType, label, supplements }) => {
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
-
+  useEffect(() => {
+    setShow(false)
+    setHover(false)
+  }, [supplements])
   return (
     <Box>
       <Box
@@ -21,10 +24,14 @@ export const Supplements = ({ appType, label, supplements }) => {
       >
         <Box direction='row' align='center'>
           {show ? <Up size='small' /> : <Down size='small' />}
-          <Text margin={{ left: 'small' }}>{`${label} Supplements`}</Text>
+          <Text
+            margin={{ left: 'small' }}
+            size='16px'
+            weight='normal'
+          >{`${label} Supplements`}</Text>
         </Box>
         <Box width='90px'>
-          <Text>{`${
+          <Text size='16px' weight='normal'>{`${
             supplements
               .filter(supp => supp.applications.includes(appType))
               .filter(supp =>
@@ -52,8 +59,12 @@ export const Supplements = ({ appType, label, supplements }) => {
             .map(essay => (
               <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                 {!!essay.instructions && (
-                  <Box margin={{ bottom: 'small', horizontal: 'medium' }}>
-                    <Text weight='bold' margin={{ bottom: 'small' }}>
+                  <Box margin={{ bottom: 'medium', horizontal: 'medium' }}>
+                    <Text
+                      size='16px'
+                      weight='bold'
+                      margin={{ bottom: 'small' }}
+                    >
                       Instructions:
                     </Text>
                     <Text
@@ -80,9 +91,11 @@ export const Supplements = ({ appType, label, supplements }) => {
                       }}
                       margin={{ bottom: 'small' }}
                     >
-                      <Text weight='bold'>Details</Text>
+                      <Text weight='bold' size='16px'>
+                        Details
+                      </Text>
                     </Box>
-                    <Text>
+                    <Text size='16px'>
                       {essay.display_length.includes('words')
                         ? `${essay.display_length} max`
                         : essay.display_length}
@@ -99,7 +112,9 @@ export const Supplements = ({ appType, label, supplements }) => {
                       }}
                       margin={{ bottom: 'small' }}
                     >
-                      <Text weight='bold'>{essay.name}</Text>
+                      <Text weight='bold' size='16px'>
+                        {essay.name}
+                      </Text>
                       <Box
                         margin={{ left: 'small' }}
                         height='18px'

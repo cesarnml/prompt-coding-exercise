@@ -377,3 +377,11 @@ template {
 [hidden] {
   display: none;
 }
+
+p {
+  font-size: 16px;
+}
+
+li {
+  font-size: 16px;
+}

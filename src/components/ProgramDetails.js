@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Heading, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 
 export const ProgramDetails = ({ label, programs }) => {
   const [show, setShow] = useState(Array(programs.length).fill(false))
   const [isHover, setHover] = useState(Array(programs.length).fill(false))
+
+  useEffect(() => {
+    setShow(Array(programs.length).fill(false))
+    setHover(Array(programs.length).fill(false))
+  }, [programs])
+
   return (
     <Box margin={{ bottom: 'xlarge' }} width='large' elevation='small'>
       <Box
@@ -46,12 +52,14 @@ export const ProgramDetails = ({ label, programs }) => {
               )
             }}
           >
-            <Box direction='row' align='center'>
+            <Box direction='row' align='center' width='medium'>
               {show[index] ? <Up size='small' /> : <Down size='small' />}
-              <Text margin={{ left: 'small' }}>{prog.name}</Text>
+              <Text margin={{ left: 'small' }} size='16px' weight='normal'>
+                {prog.name}
+              </Text>
             </Box>
             <Box width='90px'>
-              <Text>{`${prog.supplements.length} ${
+              <Text size='16px' weight='normal'>{`${prog.supplements.length} ${
                 prog.supplements.length > 1 ? 'Essays' : 'Essay'
               }`}</Text>
             </Box>
@@ -71,11 +79,15 @@ export const ProgramDetails = ({ label, programs }) => {
                       }}
                       margin={{ bottom: 'small' }}
                     >
-                      <Text weight='bold'>Details</Text>
+                      <Text weight='bold' size='16px'>
+                        Details
+                      </Text>
                     </Box>
-                    <Text>{`${supp.display_length} max`}</Text>
-                    <Text>{supp.optional ? 'Optional' : 'Required'}</Text>
-                    <Text>All Applications</Text>
+                    <Text size='16px'>{`${supp.display_length} max`}</Text>
+                    <Text size='16px'>
+                      {supp.optional ? 'Optional' : 'Required'}
+                    </Text>
+                    <Text size='16px'>All Applications</Text>
                   </Box>
                   <Box width='large'>
                     <Box
@@ -88,7 +100,9 @@ export const ProgramDetails = ({ label, programs }) => {
                       }}
                       margin={{ bottom: 'small' }}
                     >
-                      <Text weight='bold'>{supp.name}</Text>
+                      <Text weight='bold' size='16px'>
+                        {supp.name}
+                      </Text>
                     </Box>
                     <Box>
                       {supp.prompts.map(({ prompt }) => (
@@ -98,6 +112,7 @@ export const ProgramDetails = ({ label, programs }) => {
                           }
                           as='li'
                           key={prompt}
+                          size='16px'
                           dangerouslySetInnerHTML={{ __html: prompt }}
                         />
                       ))}

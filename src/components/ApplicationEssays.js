@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 export const ApplicationEssays = ({
@@ -9,6 +9,10 @@ export const ApplicationEssays = ({
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
 
+  useEffect(() => {
+    setShow(false)
+    setHover(false)
+  }, [application_essays])
   const sorted_essays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
@@ -27,11 +31,15 @@ export const ApplicationEssays = ({
       >
         <Box direction='row' align='center'>
           {show ? <Up size='small' /> : <Down size='small' />}
-          <Text margin={{ left: 'small' }}>Application Essays</Text>
+          <Text margin={{ left: 'small' }} size='16px' weight='normal'>
+            Application Essays
+          </Text>
         </Box>
         <Box width='90px'>
-          <Text>{`${appType === 'Common App' ? applications.length : '0'} ${
-            applications.length > 1 && appType === 'Common App'
+          <Text size='16px' weight='normal'>{`${
+            appType === 'Common App' ? application_essays.length : '0'
+          } ${
+            appType === 'Common App' && application_essays.length > 1
               ? 'Essays'
               : 'Essay'
           }`}</Text>
@@ -43,11 +51,15 @@ export const ApplicationEssays = ({
             ? sorted_essays.map(essay => (
                 <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
-                    <Box margin={{ bottom: 'small', horizontal: 'medium' }}>
-                      <Text weight='bold' margin={{ bottom: 'small' }}>
+                    <Box margin={{ bottom: 'medium', horizontal: 'medium' }}>
+                      <Text
+                        weight='bold'
+                        margin={{ bottom: 'small' }}
+                        size='16px'
+                      >
                         Instructions:
                       </Text>
-                      <Text>{essay.instructions}</Text>
+                      <Text size='16px'>{essay.instructions}</Text>
                     </Box>
                   )}
                   <Box
@@ -64,9 +76,11 @@ export const ApplicationEssays = ({
                         }}
                         margin={{ bottom: 'small' }}
                       >
-                        <Text weight='bold'>Details</Text>
+                        <Text weight='bold' size='16px'>
+                          Details
+                        </Text>
                       </Box>
-                      <Text>
+                      <Text size='16px'>
                         {essay.display_length.includes('words')
                           ? `${essay.display_length} max`
                           : essay.display_length}
@@ -83,7 +97,9 @@ export const ApplicationEssays = ({
                         }}
                         margin={{ bottom: 'small' }}
                       >
-                        <Text weight='bold'>{essay.name}</Text>
+                        <Text weight='bold' size='16px'>
+                          {essay.name}
+                        </Text>
                         <Box
                           margin={{ left: 'small' }}
                           height='18px'
