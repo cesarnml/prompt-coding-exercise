@@ -1,21 +1,36 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Text, Button, Layer, CheckBox } from 'grommet'
+import React, { useState, useEffect, useContext } from 'react'
+import {
+  Box,
+  Text,
+  Button,
+  Layer,
+  CheckBox,
+  TextArea,
+  Form,
+  FormField,
+} from 'grommet'
 import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
+import { UniContext } from 'App'
 export const ApplicationEssays = ({ appType, application_essays }) => {
   const [show, setShow] = useState(false)
-  const [checked, setChecked] = useState(false)
-
+  const [hash, setHash] = useState({})
+  const [textArea, setTextArea] = useState('')
+  const [edit, setEdit] = useState(null)
   const [isModal, setModal] = useState(
     Array(application_essays.length).fill(false)
   )
   const [isHover, setHover] = useState(false)
+  const value = useContext(UniContext)
 
   useEffect(() => {
     setShow(false)
     setHover(false)
+    setEdit(null)
     setModal(Array(application_essays.length).fill(false))
+    setHash({})
   }, [application_essays])
+
   const sorted_essays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
@@ -40,9 +55,12 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
         </Box>
         <Box width='90px'>
           <Text size='16px' weight='normal'>{`${
-            appType === 'Common App' ? application_essays.length : '0'
+            appType === 'Common App' || appType === 'UC App'
+              ? application_essays.length
+              : '0'
           } ${
-            appType === 'Common App' && application_essays.length > 1
+            (appType === 'Common App' || appType === 'UC App') &&
+            application_essays.length > 1
               ? 'Essays'
               : 'Essay'
           }`}</Text>
@@ -50,7 +68,7 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
       </Box>
       {show && (
         <Box as='ul' margin={{ bottom: 'medium' }}>
-          {appType === 'Common App'
+          {appType === 'Common App' || appType === 'UC App'
             ? sorted_essays.map((essay, index) => (
                 <Box as='li' key={essay.name} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
@@ -180,24 +198,27 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                                 </Box>
 
                                 <Box as='ul' pad='medium'>
-                                  {essay.prompts.map(
-                                    ({ prompt, slug }, idx) => (
-                                      <Box
-                                        margin={{ bottom: 'medium' }}
-                                        key={prompt}
-                                      >
-                                        <CheckBox
-                                          value={slug}
-                                          color='#2DA7A4'
-                                          checked={checked === slug}
-                                          label={stripHtml(prompt)}
-                                          onChange={e => {
-                                            setChecked(e.target.value)
-                                          }}
-                                        />
-                                      </Box>
-                                    )
-                                  )}
+                                  {essay.prompts.map(({ prompt, slug }) => (
+                                    <Box
+                                      margin={{ bottom: 'medium' }}
+                                      key={prompt}
+                                    >
+                                      <CheckBox
+                                        data-essay={essay.slug}
+                                        value={slug}
+                                        color='#2DA7A4'
+                                        checked={hash[essay.slug] === slug}
+                                        label={stripHtml(prompt)}
+                                        onChange={e => {
+                                          e.persist()
+                                          setHash(prev => ({
+                                            ...prev,
+                                            [e.target.dataset.essay]: slug,
+                                          }))
+                                        }}
+                                      />
+                                    </Box>
+                                  ))}
                                 </Box>
                               </Layer>
                             )}
@@ -205,22 +226,73 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                         ) : null}
                       </Box>
                       <Box as='ul'>
-                        {essay.prompts.map(({ prompt, slug }, idx) => (
-                          <Box as='li' key={prompt}>
-                            <Text
-                              size='16px'
-                              style={
-                                essay.prompts.length > 1
-                                  ? {
-                                      fontWeight:
-                                        checked === slug ? 'bold' : 'normal',
-                                      color:
-                                        checked === slug ? '#2DA7A4' : 'black',
+                        {essay.prompts.map(({ prompt, slug }) => (
+                          <Box
+                            as='li'
+                            key={prompt}
+                            data-slug={slug}
+                            onClick={e => {
+                              setTextArea(stripHtml(prompt))
+                              setEdit(e.currentTarget.dataset.slug)
+                            }}
+                          >
+                            {edit !== slug ? (
+                              <Text
+                                size='16px'
+                                style={
+                                  essay.prompts.length > 1
+                                    ? {
+                                        fontWeight:
+                                          hash[essay.slug] === slug
+                                            ? 'bold'
+                                            : 'normal',
+                                        color:
+                                          hash[essay.slug] === slug
+                                            ? '#2DA7A4'
+                                            : 'black',
+                                      }
+                                    : {}
+                                }
+                                dangerouslySetInnerHTML={{ __html: prompt }}
+                              />
+                            ) : (
+                              <Form
+                                value={{ textarea: textArea }}
+                                onSubmit={e => {
+                                  const copyEssays = application_essays.map(
+                                    ess => {
+                                      if (ess.slug === essay.slug) {
+                                        const newPrompts = ess.prompts.map(
+                                          pro => {
+                                            if (pro.slug === slug) {
+                                              return {
+                                                ...pro,
+                                                prompt: e.value.textarea,
+                                              }
+                                            } else {
+                                              return pro
+                                            }
+                                          }
+                                        )
+                                        ess.prompts = newPrompts
+                                        return ess
+                                      }
+                                      return ess
                                     }
-                                  : {}
-                              }
-                              dangerouslySetInnerHTML={{ __html: prompt }}
-                            />
+                                  )
+                                  value.setUniversity(prev => ({
+                                    ...prev,
+                                    application_essays: copyEssays,
+                                  }))
+                                }}
+                              >
+                                <FormField
+                                  component={TextArea}
+                                  name='textarea'
+                                />
+                                <Button label='submit' type='submit' />
+                              </Form>
+                            )}
                           </Box>
                         ))}
                       </Box>

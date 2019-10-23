@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Text, Button, CheckBox, Layer } from 'grommet'
+import React, { useState, useEffect, useContext } from 'react'
+import { Box, Text, Button, CheckBox, Layer, FormField, TextArea, Form } from 'grommet'
 import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
+import {UniContext} from 'App'
 
 export const Supplements = ({ appType, label, supplements }) => {
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
-  const [checked, setChecked] = useState(false)
-
+  const [hash, setHash] = useState({})
+  const [textArea, setTextArea] = useState('')
+  const [edit, setEdit] = useState(null)
   const [isModal, setModal] = useState(Array(supplements.length).fill(false))
-
+  const value = useContext(UniContext)
   useEffect(() => {
     setShow(false)
     setHover(false)
+    setHash({})
+    setEdit(null)
     setModal(Array(supplements.length).fill(false))
   }, [supplements])
   return (
@@ -189,16 +193,24 @@ export const Supplements = ({ appType, label, supplements }) => {
                                 />
                               </Box>
                               <Box as='ul' pad='medium'>
-                                {essay.prompts.map(({ prompt }, slug) => (
+                                {essay.prompts.map(({ prompt, slug }) => (
                                   <Box
                                     margin={{ bottom: 'medium' }}
                                     justify='start'
                                   >
                                     <CheckBox
+                                      data-essay={essay.slug}
                                       value={slug}
-                                      checked={checked === slug}
+                                      color='#2DA7A4'
+                                      checked={hash[essay.slug] === slug}
                                       label={stripHtml(prompt)}
-                                      onChange={e => setChecked(e.target.value)}
+                                      onChange={e => {
+                                        e.persist()
+                                        setHash(prev => ({
+                                          ...prev,
+                                          [e.target.dataset.essay]: slug,
+                                        }))
+                                      }}
                                     />
                                   </Box>
                                 ))}
@@ -209,22 +221,69 @@ export const Supplements = ({ appType, label, supplements }) => {
                       ) : null}
                     </Box>
                     <Box as='ul'>
-                      {essay.prompts.map(({ prompt }, slug) => (
-                        <Box as='li' key={prompt}>
-                          <Text
+                      {essay.prompts.map(({ prompt, slug }) => (
+                        <Box
+                          as='li'
+                          key={prompt}
+                          data-slug={slug}
+                          onClick={e => {
+                            setTextArea(stripHtml(prompt))
+                            setEdit(e.currentTarget.dataset.slug)
+                          }}
+                        >
+                          {edit !== slug ? <Text
                             style={
                               essay.prompts.length > 1
                                 ? {
                                     fontWeight:
-                                      checked === slug ? 'bold' : 'normal',
+                                      hash[essay.slug] === slug
+                                        ? 'bold'
+                                        : 'normal',
                                     color:
-                                      checked === slug ? '#2DA7A4' : 'black',
+                                      hash[essay.slug] === slug
+                                        ? '#2DA7A4'
+                                        : 'black',
                                   }
                                 : {}
                             }
                             size='16px'
                             dangerouslySetInnerHTML={{ __html: prompt }}
-                          />
+                          /> : <Form
+                                value={{ textarea: textArea }}
+                                onSubmit={e => {
+                                  const copyEssays = supplements.map(
+                                    ess => {
+                                      if (ess.slug === essay.slug) {
+                                        const newPrompts = ess.prompts.map(
+                                          pro => {
+                                            if (pro.slug === slug) {
+                                              return {
+                                                ...pro,
+                                                prompt: e.value.textarea,
+                                              }
+                                            } else {
+                                              return pro
+                                            }
+                                          }
+                                        )
+                                        ess.prompts = newPrompts
+                                        return ess
+                                      }
+                                      return ess
+                                    }
+                                  )
+                                  value.setUniversity(prev => ({
+                                    ...prev,
+                                    supplements: copyEssays,
+                                  }))
+                                }}
+                              >
+                                <FormField
+                                  component={TextArea}
+                                  name='textarea'
+                                />
+                                <Button label='submit' type='submit' />
+                              </Form>}
                         </Box>
                       ))}
                     </Box>

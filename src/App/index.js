@@ -5,6 +5,8 @@ import { UniversitySelect, UniversityDetails } from 'components'
 import { getUniversities, getUniversity } from 'apis'
 import { swap, isEmpty } from 'utils'
 
+export const UniContext = React.createContext()
+
 const App = () => {
   const [value, setValue] = useState('')
   const [hash, setHash] = useState([])
@@ -66,19 +68,24 @@ const App = () => {
   }, [value, hash])
 
   return (
-    <Grommet full theme={grommet}>
-      <UniversitySelect
-        label='Select a university'
-        value={value}
-        options={options}
-        defaults={defaults}
-        setValue={setValue}
-        setOptions={setOptions}
-      />
-      {!isEmpty(university) && (
-        <UniversityDetails label='Essay Requirements' university={university} />
-      )}
-    </Grommet>
+    <UniContext.Provider value={{ setUniversity }}>
+      <Grommet full theme={grommet}>
+        <UniversitySelect
+          label='Select a university'
+          value={value}
+          options={options}
+          defaults={defaults}
+          setValue={setValue}
+          setOptions={setOptions}
+        />
+        {!isEmpty(university) && (
+          <UniversityDetails
+            label='Essay Requirements'
+            university={university}
+          />
+        )}
+      </Grommet>
+    </UniContext.Provider>
   )
 }
 export default App
