@@ -30,7 +30,7 @@ export const ProgramDetails = ({ label, programs }) => {
       </Box>
 
       {programs.map((prog, index) => (
-        <Box key={prog.name}>
+        <Box key={index}>
           <Box
             style={{ cursor: 'pointer' }}
             as='h4'
@@ -68,12 +68,8 @@ export const ProgramDetails = ({ label, programs }) => {
           </Box>
           {show[index] && (
             <Box pad='medium' margin={{ horizontal: 'medium' }}>
-              {prog.supplements.map(supp => (
-                <Box
-                  direction='row'
-                  key={supp.name}
-                  margin={{ bottom: 'medium' }}
-                >
+              {prog.supplements.map((supp, i) => (
+                <Box direction='row' key={i} margin={{ bottom: 'medium' }}>
                   <Box width='small' margin={{ right: 'medium' }}>
                     <Box
                       direction='row'
@@ -126,8 +122,8 @@ export const ProgramDetails = ({ label, programs }) => {
                       </Box>
                     </Box>
                     <Box>
-                      {supp.prompts.map(({ prompt }) => (
-                        <Box as='li' key={prompt}>
+                      {supp.prompts.map(({ prompt }, i) => (
+                        <Box as='li' key={i}>
                           <Text
                             size='16px'
                             dangerouslySetInnerHTML={{ __html: prompt }}
