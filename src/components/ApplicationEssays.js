@@ -19,7 +19,6 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
   const sorted_essays = [...application_essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
-  console.log('checked', checked)
   return (
     <Box>
       <Box
@@ -134,8 +133,6 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                               icon={<Edit size='small' />}
                               label='Select Prompt'
                               onClick={e => {
-                                console.log('EVENT OPEN', e.target)
-
                                 setModal(prev =>
                                   prev.map((ele, idx) =>
                                     index === idx ? true : ele
@@ -150,7 +147,6 @@ export const ApplicationEssays = ({ appType, application_essays }) => {
                             {isModal[index] && (
                               <Layer
                                 onEsc={e => {
-                                  console.log(e)
                                   setModal(prev =>
                                     prev.map((ele, idx) =>
                                       index === idx ? false : ele
