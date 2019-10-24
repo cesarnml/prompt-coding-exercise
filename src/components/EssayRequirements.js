@@ -12,7 +12,12 @@ import {
 import { Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
-import { EssayTab, EssayInstructions, EssayDetails } from 'components'
+import {
+  EssayTab,
+  EssayInstructions,
+  EssayDetails,
+  EssayHeading,
+} from 'components'
 
 export const EssayRequirements = ({ appType, label, essays }) => {
   const [show, setShow] = useState(false)
@@ -74,25 +79,7 @@ export const EssayRequirements = ({ appType, label, essays }) => {
                         }}
                         margin={{ bottom: 'small' }}
                       >
-                        <Box direction='row'>
-                          <Text weight='bold' size='16px' truncate>
-                            {essay.name}
-                          </Text>
-                          <Box
-                            margin={{ left: 'small' }}
-                            height='16px'
-                            justify='center'
-                            background='#2DA7A4'
-                            round='small'
-                            pad={{ horizontal: 'xsmall' }}
-                          >
-                            <Text color='white' weight='bold' size='xsmall'>
-                              {essay.last_updated === new Date().getFullYear()
-                                ? 'Current'
-                                : essay.last_updated}
-                            </Text>
-                          </Box>
-                        </Box>
+                        <EssayHeading essay={essay} />
                         {essay.prompts.length > 1 ? (
                           <Box
                             height='16px'
