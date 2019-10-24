@@ -1,4 +1,6 @@
 import React from 'react'
+import { Box, Text } from 'grommet'
+import { stripHtml } from 'utils'
 
 export const EssayInstructions = ({ instructions }) => {
   return (

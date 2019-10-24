@@ -12,7 +12,7 @@ import {
 import { Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
-import { EssayTab, EssayInstructions } from 'components'
+import { EssayTab, EssayInstructions, EssayDetails } from 'components'
 
 export const EssayRequirements = ({ appType, label, essays }) => {
   const [show, setShow] = useState(false)
@@ -61,28 +61,7 @@ export const EssayRequirements = ({ appType, label, essays }) => {
                     justify='between'
                     margin={{ horizontal: 'medium' }}
                   >
-                    <Box width='small' margin={{ right: 'medium' }}>
-                      <Box
-                        border={{
-                          side: 'bottom',
-                          size: 'small',
-                          color: '#2DA7A1',
-                        }}
-                        margin={{ bottom: 'small' }}
-                      >
-                        <Text weight='bold' size='16px'>
-                          Details
-                        </Text>
-                      </Box>
-                      <Text size='16px'>
-                        {essay.display_length.includes('words')
-                          ? `${essay.display_length} max`
-                          : essay.display_length}
-                      </Text>
-                      <Text size='16px'>
-                        {essay.optional ? 'Optional' : 'Required'}
-                      </Text>
-                    </Box>
+                    <EssayDetails essay={essay} />
                     <Box width='large'>
                       <Box
                         direction='row'
