@@ -48,81 +48,77 @@ export const EssayRequirements = ({ appType, label, essays }) => {
       />
       {show && (
         <Box as='ul' margin={{ bottom: 'medium' }}>
-          {displayEssays
-            ? sortedEssays.map((essay, index) => (
-                <Box as='li' key={index} margin={{ bottom: 'medium' }}>
-                  {!!essay.instructions && (
-                    <EssayInstructions instructions={essay.instructions} />
-                  )}
-                  <Box
-                    direction='row'
-                    justify='between'
-                    margin={{ horizontal: 'medium' }}
-                  >
-                    <EssayDetails essay={essay} />
-                    <Box width='large'>
-                      <Box
-                        direction='row'
-                        justify='between'
-                        align='center'
-                        border={{
-                          side: 'bottom',
-                          size: 'small',
-                          color: '#2DA7A1',
-                        }}
-                        margin={{ bottom: 'small' }}
-                      >
-                        <EssayHeading essay={essay} />
-                        {essay.prompts.length > 1 && (
-                          <EssayPromptButton
-                            index={index}
-                            setModal={setModal}
-                          />
-                        )}
-                        {isModal[index] && (
-                          <EssayPromptModal
-                            index={index}
-                            essay={essay}
-                            hash={hash}
-                            setHash={setHash}
-                            setModal={setModal}
-                          />
-                        )}
-                      </Box>
-                      <Box as='ul'>
-                        {essay.prompts.map(({ prompt, slug }, i) => (
-                          <Box
-                            as='li'
-                            key={i}
-                            data-slug={slug}
-                            onClick={e => {
-                              setTextArea(stripHtml(prompt))
-                              setEdit(e.currentTarget.dataset.slug)
-                            }}
-                          >
-                            {edit !== slug ? (
-                              <EssayPromptText
-                                essay={essay}
-                                slug={slug}
-                                hash={hash}
-                                prompt={prompt}
-                              />
-                            ) : (
-                              <EssayPromptForm
-                                essay={essay}
-                                slug={slug}
-                                essays={essays}
-                                textArea={textArea}
-                              />
-                            )}
-                          </Box>
-                        ))}
-                      </Box>
+          {displayEssays &&
+            sortedEssays.map((essay, index) => (
+              <Box as='li' key={index} margin={{ bottom: 'medium' }}>
+                {!!essay.instructions && (
+                  <EssayInstructions instructions={essay.instructions} />
+                )}
+                <Box
+                  direction='row'
+                  justify='between'
+                  margin={{ horizontal: 'medium' }}
+                >
+                  <EssayDetails essay={essay} />
+                  <Box width='large'>
+                    <Box
+                      direction='row'
+                      justify='between'
+                      align='center'
+                      border={{
+                        side: 'bottom',
+                        size: 'small',
+                        color: '#2DA7A1',
+                      }}
+                      margin={{ bottom: 'small' }}
+                    >
+                      <EssayHeading essay={essay} />
+                      {essay.prompts.length > 1 && (
+                        <EssayPromptButton index={index} setModal={setModal} />
+                      )}
+                      {isModal[index] && (
+                        <EssayPromptModal
+                          index={index}
+                          essay={essay}
+                          hash={hash}
+                          setHash={setHash}
+                          setModal={setModal}
+                        />
+                      )}
+                    </Box>
+                    <Box as='ul'>
+                      {essay.prompts.map(({ prompt, slug }, i) => (
+                        <Box
+                          as='li'
+                          key={i}
+                          data-slug={slug}
+                          onClick={e => {
+                            setTextArea(stripHtml(prompt))
+                            setEdit(e.currentTarget.dataset.slug)
+                          }}
+                        >
+                          {edit !== slug ? (
+                            <EssayPromptText
+                              essay={essay}
+                              slug={slug}
+                              hash={hash}
+                              prompt={prompt}
+                            />
+                          ) : (
+                            <EssayPromptForm
+                              essay={essay}
+                              slug={slug}
+                              essays={essays}
+                              textArea={textArea}
+                            />
+                          )}
+                        </Box>
+                      ))}
                     </Box>
                   </Box>
                 </Box>
-              ))
-            : null}
+              </Box>
+            ))}
         </Box>
       )}
     </Box>
