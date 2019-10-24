@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Heading } from 'grommet'
-import { AppTypeHeader, EssayTab, ProgramDetails } from 'components'
+import { AppTypeHeader, EssayRequirements, ProgramDetails } from 'components'
 
 //* Function that checks if university has Program-Specific essays
 const hasPrograms = programs => {
@@ -48,17 +48,17 @@ export const UniversityDetails = ({ label, university }) => {
           elevation='small'
         >
           <AppTypeHeader appType={appType} />
-          <EssayTab
+          <EssayRequirements
             appType={appType}
             label='Application Essays'
             essays={application_essays}
           />
-          <EssayTab
+          <EssayRequirements
             label='Required Supplements'
             appType={appType}
             essays={getReqSupp(supplements, appType)}
           />
-          <EssayTab
+          <EssayRequirements
             label='Optional Supplements'
             appType={appType}
             essays={getOptSupp(supplements, appType)}
