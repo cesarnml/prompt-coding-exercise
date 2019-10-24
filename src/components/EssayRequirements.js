@@ -12,7 +12,7 @@ import {
 import { Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
-import { EssayTab } from 'components'
+import { EssayTab, EssayInstructions } from 'components'
 
 export const EssayRequirements = ({ appType, label, essays }) => {
   const [show, setShow] = useState(false)
@@ -54,16 +54,7 @@ export const EssayRequirements = ({ appType, label, essays }) => {
             ? sortedEssays.map((essay, index) => (
                 <Box as='li' key={index} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
-                    <Box margin={{ bottom: 'medium', horizontal: 'medium' }}>
-                      <Text
-                        size='16px'
-                        weight='bold'
-                        margin={{ bottom: 'small' }}
-                      >
-                        Instructions:
-                      </Text>
-                      <Text size='16px'>{stripHtml(essay.instructions)}</Text>
-                    </Box>
+                    <EssayInstructions instructions={essay.instructions} />
                   )}
                   <Box
                     direction='row'
