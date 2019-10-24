@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-  Box,
-  Text,
-  Button,
-  CheckBox,
-  Layer,
-  Form,
-  FormField,
-  TextArea,
-} from 'grommet'
+import { Box, Text, Button, Form, FormField, TextArea } from 'grommet'
 import { Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
@@ -17,6 +8,7 @@ import {
   EssayInstructions,
   EssayDetails,
   EssayHeading,
+  EssayPromptModal,
 } from 'components'
 
 export const EssayRequirements = ({ appType, label, essays }) => {
@@ -105,61 +97,13 @@ export const EssayRequirements = ({ appType, label, essays }) => {
                               style={{ fontSize: '12px', fontWeight: 'bold' }}
                             />
                             {isModal[index] && (
-                              <Layer
-                                onEsc={e =>
-                                  setModal(prev =>
-                                    prev.map((ele, idx) =>
-                                      index === idx ? false : ele
-                                    )
-                                  )
-                                }
-                                onClickOutside={() =>
-                                  setModal(prev =>
-                                    prev.map((ele, idx) =>
-                                      index === idx ? false : ele
-                                    )
-                                  )
-                                }
-                              >
-                                <Box
-                                  width='xsmall'
-                                  alignSelf='end'
-                                  margin='small'
-                                >
-                                  <Button
-                                    label='close'
-                                    color='#2DA7A4'
-                                    onClick={() =>
-                                      setModal(prev =>
-                                        prev.map((ele, idx) =>
-                                          index === idx ? false : ele
-                                        )
-                                      )
-                                    }
-                                  />
-                                </Box>
-
-                                <Box as='ul' pad='medium'>
-                                  {essay.prompts.map(({ prompt, slug }, i) => (
-                                    <Box margin={{ bottom: 'medium' }} key={i}>
-                                      <CheckBox
-                                        data-essay={essay.slug}
-                                        value={slug}
-                                        color='#2DA7A4'
-                                        checked={hash[essay.slug] === slug}
-                                        label={stripHtml(prompt)}
-                                        onChange={e => {
-                                          e.persist()
-                                          setHash(prev => ({
-                                            ...prev,
-                                            [e.target.dataset.essay]: slug,
-                                          }))
-                                        }}
-                                      />
-                                    </Box>
-                                  ))}
-                                </Box>
-                              </Layer>
+                              <EssayPromptModal
+                                index={index}
+                                essay={essay}
+                                hash={hash}
+                                setHash={setHash}
+                                setModal={setModal}
+                              />
                             )}
                           </Box>
                         ) : null}
