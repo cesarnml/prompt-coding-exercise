@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Box, Text, Button, Form, FormField, TextArea } from 'grommet'
+import React, { useState, useEffect } from 'react'
+import { Box, Text } from 'grommet'
 import { stripHtml } from 'utils'
-import { UniContext } from 'App'
 
 import {
   EssayTab,
@@ -10,6 +9,7 @@ import {
   EssayHeading,
   EssayPromptButton,
   EssayPromptModal,
+  EssayPromptForm,
 } from 'components'
 
 export const EssayRequirements = ({ appType, label, essays }) => {
@@ -18,7 +18,6 @@ export const EssayRequirements = ({ appType, label, essays }) => {
   const [textArea, setTextArea] = useState('')
   const [edit, setEdit] = useState(null)
   const [isModal, setModal] = useState(Array(essays.length).fill(false))
-  const { setUniversity } = useContext(UniContext)
 
   useEffect(() => {
     setHash({})
@@ -121,40 +120,12 @@ export const EssayRequirements = ({ appType, label, essays }) => {
                                 dangerouslySetInnerHTML={{ __html: prompt }}
                               />
                             ) : (
-                              <Form
-                                value={{ textarea: textArea }}
-                                onSubmit={e => {
-                                  const copyEssays = essays.map(ess => {
-                                    if (ess.slug === essay.slug) {
-                                      const newPrompts = ess.prompts.map(
-                                        pro => {
-                                          if (pro.slug === slug) {
-                                            return {
-                                              ...pro,
-                                              prompt: e.value.textarea,
-                                            }
-                                          } else {
-                                            return pro
-                                          }
-                                        }
-                                      )
-                                      ess.prompts = newPrompts
-                                      return ess
-                                    }
-                                    return ess
-                                  })
-                                  setUniversity(prev => ({
-                                    ...prev,
-                                    application_essays: copyEssays,
-                                  }))
-                                }}
-                              >
-                                <FormField
-                                  component={TextArea}
-                                  name='textarea'
-                                />
-                                <Button label='submit' type='submit' />
-                              </Form>
+                              <EssayPromptForm
+                                essay={essay}
+                                slug={slug}
+                                essays={essays}
+                                textArea={textArea}
+                              />
                             )}
                           </Box>
                         ))}
