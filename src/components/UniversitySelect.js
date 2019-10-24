@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Box, Select, Text } from 'grommet'
+import styled from 'styled-components'
+
+const Container = styled(Box)`
+  background-color: #2da7a4;
+  color: white;
+  font-weight: bold;
+`
+
+const StyledSelect = styled(Select)`
+  background-color: white;
+  color: #444;
+`
 
 export const UniversitySelect = ({ label, ops, setIped }) => {
   const [value, setValue] = useState('')
@@ -10,12 +22,17 @@ export const UniversitySelect = ({ label, ops, setIped }) => {
   }, [ops])
 
   return (
-    <Box margin='small' pad='medium' align='start'>
+    <Container pad={{ horizontal: 'large', vertical: 'medium' }} align='start'>
       <Box width='medium'>
-        <Text as='label' htmlFor='university-select__input'>
+        <Text
+          as='label'
+          htmlFor='university-select__input'
+          size='1.6rem'
+          margin={{ bottom: 'small' }}
+        >
           {label}
         </Text>
-        <Select
+        <StyledSelect
           id='university-select'
           size='medium'
           dropHeight='medium'
@@ -38,6 +55,6 @@ export const UniversitySelect = ({ label, ops, setIped }) => {
           }}
         />
       </Box>
-    </Box>
+    </Container>
   )
 }

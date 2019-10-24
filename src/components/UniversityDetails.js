@@ -32,14 +32,12 @@ export const UniversityDetails = ({ label, university }) => {
     <Box
       align='start'
       as='article'
-      margin={{ bottom: 'small', horizontal: 'small' }}
+      margin='small'
       pad={{ bottom: 'medium', horizontal: 'medium' }}
     >
-      <Heading
-        level='1'
-        size='xsmall'
-        margin={{ top: 'none' }}
-      >{`${label} - ${name}`}</Heading>
+      <Heading level='1' size='xsmall' margin={{ bottom: 'medium' }}>
+        {`${label} - ${name}`}
+      </Heading>
       {applications.map((appType, i) => (
         <Box
           key={i}

@@ -4,7 +4,6 @@ import { grommet } from 'grommet/themes'
 import { UniversitySelect, UniversityDetails } from 'components'
 import { getUniversities, getUniversity } from 'apis'
 import { swap, isEmpty } from 'utils'
-
 export const UniContext = React.createContext()
 
 const App = () => {
