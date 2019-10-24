@@ -13,7 +13,6 @@ const App = () => {
   const [university, setUniversity] = useState({})
 
   useEffect(() => {
-    console.log('useEffectAppMount')
     const fetchUniversities = async () => {
       const { data: universities } = await getUniversities()
       const OPTIONS = universities.map(uni => ({
