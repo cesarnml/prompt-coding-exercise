@@ -8,25 +8,19 @@ import { swap, isEmpty } from 'utils'
 export const UniContext = React.createContext()
 
 const App = () => {
-  const [value, setValue] = useState('')
-  const [hash, setHash] = useState([])
-  const [defaults, setDefaults] = useState([])
-  const [options, setOptions] = useState([])
+  const [iped, setIped] = useState('')
+  const [ops, setOps] = useState([])
   const [university, setUniversity] = useState({})
 
   useEffect(() => {
+    console.log('useEffectAppMount')
     const fetchUniversities = async () => {
       const { data: universities } = await getUniversities()
-      const universityNames = universities.map(ele => ele.name)
-
-      setHash(
-        universities.reduce(
-          (acc, cur) => ({ ...acc, [cur.name]: cur.iped }),
-          {}
-        )
-      )
-      setDefaults(universityNames)
-      setOptions(universityNames)
+      const OPTIONS = universities.map(uni => ({
+        val: uni.iped,
+        lab: uni.name,
+      }))
+      setOps(OPTIONS)
     }
 
     try {
@@ -38,45 +32,38 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (value && !isEmpty(hash)) {
+    if (iped) {
       const fetchUniversity = async iped => {
         const { data: university } = await getUniversity(iped)
-        //* Swap Common App and Coalition App
-        //? Is this mutating state?
+        //* Swap Common App and Coalition App Order
         university.applications = swap(
           university.applications,
           'Common',
           'Coalition'
         )
 
-        //* University has_own_application => push into applications array
-        //? Is this mutating state?
+        //* university.has_own_application === true => push into applications array
         if (university.has_own_application) {
           university.applications.push('University Application')
         }
 
         setUniversity(university)
       }
-      //TODO: Consider optimizing
-      //# O(N) to O(1) ... optimization success
-      const iped = hash[value]
+
       try {
         fetchUniversity(iped)
       } catch (err) {
         console.error(err)
       }
     }
-  }, [value, hash])
+  }, [iped])
 
   return (
     <Grommet full theme={grommet}>
       <UniversitySelect
         label='Select a university'
-        value={value}
-        options={options}
-        defaults={defaults}
-        setValue={setValue}
-        setOptions={setOptions}
+        ops={ops}
+        setIped={setIped}
       />
       <UniContext.Provider value={{ setUniversity }}>
         {!isEmpty(university) && (
