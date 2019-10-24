@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Box, Text, Button, Form, FormField, TextArea } from 'grommet'
-import { Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
+
 import {
   EssayTab,
   EssayInstructions,
   EssayDetails,
   EssayHeading,
+  EssayPromptButton,
   EssayPromptModal,
 } from 'components'
 
@@ -72,41 +73,21 @@ export const EssayRequirements = ({ appType, label, essays }) => {
                         margin={{ bottom: 'small' }}
                       >
                         <EssayHeading essay={essay} />
-                        {essay.prompts.length > 1 ? (
-                          <Box
-                            height='16px'
-                            justify='center'
-                            style={{ cursor: 'pointer' }}
-                          >
-                            <Button
-                              plain
-                              pad='none'
-                              size='xsmall'
-                              icon={<Edit size='small' />}
-                              label='Select Prompt'
-                              gap='small'
-                              reverse
-                              onClick={e => {
-                                setModal(prev =>
-                                  prev.map((ele, idx) =>
-                                    index === idx ? true : ele
-                                  )
-                                )
-                              }}
-                              hoverIndicator='true'
-                              style={{ fontSize: '12px', fontWeight: 'bold' }}
-                            />
-                            {isModal[index] && (
-                              <EssayPromptModal
-                                index={index}
-                                essay={essay}
-                                hash={hash}
-                                setHash={setHash}
-                                setModal={setModal}
-                              />
-                            )}
-                          </Box>
-                        ) : null}
+                        {essay.prompts.length > 1 && (
+                          <EssayPromptButton
+                            index={index}
+                            setModal={setModal}
+                          />
+                        )}
+                        {isModal[index] && (
+                          <EssayPromptModal
+                            index={index}
+                            essay={essay}
+                            hash={hash}
+                            setHash={setHash}
+                            setModal={setModal}
+                          />
+                        )}
                       </Box>
                       <Box as='ul'>
                         {essay.prompts.map(({ prompt, slug }, i) => (
