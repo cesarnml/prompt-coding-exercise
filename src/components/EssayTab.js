@@ -13,7 +13,25 @@ import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
 
-export const ApplicationEssays = ({ appType, label, essays }) => {
+const renderEssayCount = (essays, appType) => {
+  //* app_essays vs supplements treated slightly different
+  const isAppEssay = appType === 'Common App' || appType === 'UC App'
+  if (isAppEssay) {
+    return (
+      <Text size='16px' weight='normal'>{`${isAppEssay ? essays.length : '0'} ${
+        isAppEssay && essays.length > 1 ? 'Essays' : 'Essay'
+      }`}</Text>
+    )
+  } else {
+    return (
+      <Text size='16px' weight='normal'>{`${essays.length} ${
+        essays.length > 1 ? 'Essays' : 'Essay'
+      }`}</Text>
+    )
+  }
+}
+
+export const EssayTab = ({ appType, label, essays }) => {
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
   const [hash, setHash] = useState({})
@@ -29,9 +47,16 @@ export const ApplicationEssays = ({ appType, label, essays }) => {
     setModal(Array(essays.length).fill(false))
   }, [essays])
 
+  //* Display essays with most prompts first
   const sortedEssays = [...essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
+
+  //* Needed because of odd way of determining appType of app_essays
+  const displayEssays =
+    appType === 'Common App' ||
+    appType === 'UC App' ||
+    label.includes('Supplements')
 
   return (
     <Box>
@@ -52,23 +77,11 @@ export const ApplicationEssays = ({ appType, label, essays }) => {
             {label}
           </Text>
         </Box>
-        {/* change what gets rendered based on label */}
-        <Box width='90px'>
-          <Text size='16px' weight='normal'>{`${
-            appType === 'Common App' || appType === 'UC App'
-              ? essays.length
-              : '0'
-          } ${
-            (appType === 'Common App' || appType === 'UC App') &&
-            essays.length > 1
-              ? 'Essays'
-              : 'Essay'
-          }`}</Text>
-        </Box>
+        <Box width='90px'>{renderEssayCount(essays, appType)}</Box>
       </Box>
       {show && (
         <Box as='ul' margin={{ bottom: 'medium' }}>
-          {appType === 'Common App' || appType === 'UC App'
+          {displayEssays
             ? sortedEssays.map((essay, index) => (
                 <Box as='li' key={index} margin={{ bottom: 'medium' }}>
                   {!!essay.instructions && (
@@ -80,7 +93,7 @@ export const ApplicationEssays = ({ appType, label, essays }) => {
                       >
                         Instructions:
                       </Text>
-                      <Text size='16px'>{essay.instructions}</Text>
+                      <Text size='16px'>{stripHtml(essay.instructions)}</Text>
                     </Box>
                   )}
                   <Box

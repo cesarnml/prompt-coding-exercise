@@ -1,6 +1,5 @@
 export * from './UniversitySelect'
 export * from './UniversityDetails'
 export * from './AppTypeHeader'
-export * from './ApplicationEssays'
-export * from './Supplements'
+export * from './EssayTab'
 export * from './ProgramDetails'

@@ -1,15 +1,22 @@
 import React from 'react'
 import { Box, Heading } from 'grommet'
-import {
-  AppTypeHeader,
-  ApplicationEssays,
-  Supplements,
-  ProgramDetails,
-} from 'components'
+import { AppTypeHeader, EssayTab, ProgramDetails } from 'components'
 
 //* Function that checks if university has Program-Specific essays
 const hasPrograms = programs => {
   return !!programs.filter(prog => !!prog.supplements.length).length
+}
+
+const getReqSupp = (supplements, appType) => {
+  return supplements
+    .filter(supp => supp.applications.includes(appType))
+    .filter(supp => !supp.optional)
+}
+
+const getOptSupp = (supplements, appType) => {
+  return supplements
+    .filter(supp => supp.applications.includes(appType))
+    .filter(supp => supp.optional)
 }
 
 export const UniversityDetails = ({ label, university }) => {
@@ -41,20 +48,20 @@ export const UniversityDetails = ({ label, university }) => {
           elevation='small'
         >
           <AppTypeHeader appType={appType} />
-          <ApplicationEssays
+          <EssayTab
             appType={appType}
             label='Application Essays'
             essays={application_essays}
           />
-          <Supplements
+          <EssayTab
             label='Required Supplements'
             appType={appType}
-            essays={supplements}
+            essays={getReqSupp(supplements, appType)}
           />
-          <Supplements
+          <EssayTab
             label='Optional Supplements'
             appType={appType}
-            essays={supplements}
+            essays={getOptSupp(supplements, appType)}
           />
         </Box>
       ))}
