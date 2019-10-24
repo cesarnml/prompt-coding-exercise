@@ -13,25 +13,23 @@ import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
 
-export const ApplicationEssays = ({ appType, label, application_essays }) => {
+export const ApplicationEssays = ({ appType, label, essays }) => {
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
   const [hash, setHash] = useState({})
   const [textArea, setTextArea] = useState('')
   const [edit, setEdit] = useState(null)
-  const [isModal, setModal] = useState(
-    Array(application_essays.length).fill(false)
-  )
+  const [isModal, setModal] = useState(Array(essays.length).fill(false))
   const { setUniversity } = useContext(UniContext)
 
   useEffect(() => {
     setHover(false)
     setHash({})
     setEdit(null)
-    setModal(Array(application_essays.length).fill(false))
-  }, [application_essays])
+    setModal(Array(essays.length).fill(false))
+  }, [essays])
 
-  const sortedEssays = [...application_essays].sort(
+  const sortedEssays = [...essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
 
@@ -58,11 +56,11 @@ export const ApplicationEssays = ({ appType, label, application_essays }) => {
         <Box width='90px'>
           <Text size='16px' weight='normal'>{`${
             appType === 'Common App' || appType === 'UC App'
-              ? application_essays.length
+              ? essays.length
               : '0'
           } ${
             (appType === 'Common App' || appType === 'UC App') &&
-            application_essays.length > 1
+            essays.length > 1
               ? 'Essays'
               : 'Essay'
           }`}</Text>
@@ -169,7 +167,7 @@ export const ApplicationEssays = ({ appType, label, application_essays }) => {
                             />
                             {isModal[index] && (
                               <Layer
-                                onEsc={e => 
+                                onEsc={e =>
                                   setModal(prev =>
                                     prev.map((ele, idx) =>
                                       index === idx ? false : ele
@@ -262,27 +260,25 @@ export const ApplicationEssays = ({ appType, label, application_essays }) => {
                               <Form
                                 value={{ textarea: textArea }}
                                 onSubmit={e => {
-                                  const copyEssays = application_essays.map(
-                                    ess => {
-                                      if (ess.slug === essay.slug) {
-                                        const newPrompts = ess.prompts.map(
-                                          pro => {
-                                            if (pro.slug === slug) {
-                                              return {
-                                                ...pro,
-                                                prompt: e.value.textarea,
-                                              }
-                                            } else {
-                                              return pro
+                                  const copyEssays = essays.map(ess => {
+                                    if (ess.slug === essay.slug) {
+                                      const newPrompts = ess.prompts.map(
+                                        pro => {
+                                          if (pro.slug === slug) {
+                                            return {
+                                              ...pro,
+                                              prompt: e.value.textarea,
                                             }
+                                          } else {
+                                            return pro
                                           }
-                                        )
-                                        ess.prompts = newPrompts
-                                        return ess
-                                      }
+                                        }
+                                      )
+                                      ess.prompts = newPrompts
                                       return ess
                                     }
-                                  )
+                                    return ess
+                                  })
                                   setUniversity(prev => ({
                                     ...prev,
                                     application_essays: copyEssays,

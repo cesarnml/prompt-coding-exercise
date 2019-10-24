@@ -13,23 +13,23 @@ import { Down, Up, Edit } from 'grommet-icons'
 import { stripHtml } from 'utils'
 import { UniContext } from 'App'
 
-export const Supplements = ({ appType, label, supplements }) => {
+export const Supplements = ({ appType, label, essays }) => {
   const [show, setShow] = useState(false)
   const [isHover, setHover] = useState(false)
   const [hash, setHash] = useState({})
   const [textArea, setTextArea] = useState('')
   const [edit, setEdit] = useState(null)
-  const [isModal, setModal] = useState(Array(supplements.length).fill(false))
+  const [isModal, setModal] = useState(Array(essays.length).fill(false))
   const { setUniversity } = useContext(UniContext)
 
   useEffect(() => {
     setHover(false)
     setHash({})
     setEdit(null)
-    setModal(Array(supplements.length).fill(false))
-  }, [supplements])
+    setModal(Array(essays.length).fill(false))
+  }, [essays])
 
-  const sortedEssays = [...supplements].sort(
+  const sortedEssays = [...essays].sort(
     (a, b) => b.prompts.length - a.prompts.length
   )
 
@@ -255,7 +255,7 @@ export const Supplements = ({ appType, label, supplements }) => {
                           <Form
                             value={{ textarea: textArea }}
                             onSubmit={e => {
-                              const copyEssays = supplements.map(ess => {
+                              const copyEssays = essays.map(ess => {
                                 if (ess.slug === essay.slug) {
                                   const newPrompts = ess.prompts.map(pro => {
                                     if (pro.slug === slug) {
