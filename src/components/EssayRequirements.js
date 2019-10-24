@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Text } from 'grommet'
+import { Box } from 'grommet'
 import { stripHtml } from 'utils'
 
 import {
@@ -9,6 +9,7 @@ import {
   EssayHeading,
   EssayPromptButton,
   EssayPromptModal,
+  EssayPromptText,
   EssayPromptForm,
 } from 'components'
 
@@ -100,24 +101,11 @@ export const EssayRequirements = ({ appType, label, essays }) => {
                             }}
                           >
                             {edit !== slug ? (
-                              <Text
-                                size='16px'
-                                style={
-                                  essay.prompts.length > 1
-                                    ? {
-                                        fontWeight:
-                                          hash[essay.slug] === slug
-                                            ? 'bold'
-                                            : 'normal',
-                                        color:
-                                          hash[essay.slug] === slug
-                                            ? '#2DA7A4'
-                                            : 'black',
-                                        cursor: 'pointer',
-                                      }
-                                    : { cursor: 'pointer' }
-                                }
-                                dangerouslySetInnerHTML={{ __html: prompt }}
+                              <EssayPromptText
+                                essay={essay}
+                                slug={slug}
+                                hash={hash}
+                                prompt={prompt}
                               />
                             ) : (
                               <EssayPromptForm
