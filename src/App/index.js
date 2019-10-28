@@ -4,12 +4,14 @@ import { grommet } from 'grommet/themes'
 import { UniversitySelect, UniversityDetails } from 'components'
 import { getUniversities, getUniversity } from 'apis'
 import { swap, isEmpty } from 'utils'
+
 export const UniContext = React.createContext()
 
 const App = () => {
   const [iped, setIped] = useState('')
   const [ops, setOps] = useState([])
   const [university, setUniversity] = useState({})
+  const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -21,18 +23,15 @@ const App = () => {
       setOps(OPTIONS)
     }
 
-    try {
-      fetchUniversities()
-    } catch (err) {
-      //TODO: generalize error catcher
-      console.error(err)
-    }
+    fetchUniversities()
   }, [])
 
   useEffect(() => {
     if (iped) {
       const fetchUniversity = async iped => {
+        setLoading(true)
         const { data: university } = await getUniversity(iped)
+
         //* Swap Common App and Coalition App Order
         university.applications = swap(
           university.applications,
@@ -46,13 +45,10 @@ const App = () => {
         }
 
         setUniversity(university)
+        setLoading(false)
       }
 
-      try {
-        fetchUniversity(iped)
-      } catch (err) {
-        console.error(err)
-      }
+      fetchUniversity(iped)
     }
   }, [iped])
 
@@ -64,7 +60,11 @@ const App = () => {
         setIped={setIped}
       />
       <UniContext.Provider value={{ setUniversity }}>
-        {!isEmpty(university) && (
+        {isLoading ? (
+          <h1>Loading ...</h1>
+        ) : isEmpty(university) ? (
+          <h1>Waiting on choice ...</h1>
+        ) : (
           <UniversityDetails
             label='Essay Requirements'
             university={university}

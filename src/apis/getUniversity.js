@@ -6,8 +6,13 @@ export const getUniversity = async iped => {
       Authorization: `Token ${process.env.REACT_APP_PROMPT_TOKEN}`,
     },
   }
-  return axios.get(
-    `${process.env.REACT_APP_PROMPT_URL}/api/data/university/${iped}/`,
-    config
-  )
+
+  try {
+    return axios.get(
+      `${process.env.REACT_APP_PROMPT_URL}/api/data/university/${iped}/`,
+      config
+    )
+  } catch (error) {
+    console.error(error)
+  }
 }
