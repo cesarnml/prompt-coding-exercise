@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Box, Heading, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 
@@ -140,4 +141,26 @@ export const ProgramDetails = ({ label, programs }) => {
       ))}
     </Box>
   )
+}
+
+ProgramDetails.propTypes = {
+  label: PropTypes.string.isRequired,
+  programs: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      supplements: PropTypes.arrayOf(
+        PropTypes.shape({
+          display_length: PropTypes.string,
+          optional: PropTypes.bool,
+          supp: PropTypes.string,
+          last_updated: PropTypes.number,
+          prompts: PropTypes.arrayOf(
+            PropTypes.shape({
+              prompt: PropTypes.string,
+            })
+          ).isRequired,
+        })
+      ).isRequired,
+    })
+  ),
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Text } from 'grommet'
 import { stripHtml } from 'utils'
 
@@ -11,4 +12,8 @@ export const EssayInstructions = ({ instructions }) => {
       <Text size='16px'>{stripHtml(instructions)}</Text>
     </Box>
   )
+}
+
+EssayInstructions.propTypes = {
+  instructions: PropTypes.string.isRequired,
 }

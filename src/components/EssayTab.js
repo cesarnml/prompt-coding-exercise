@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { Box, Text } from 'grommet'
 import { Down, Up } from 'grommet-icons'
 
@@ -44,4 +45,12 @@ export const EssayTab = ({ label, appType, essays, show, setShow }) => {
       <Box width='90px'>{renderEssayCount(appType, essays)}</Box>
     </Box>
   )
+}
+
+EssayTab.propTypes = {
+  label: PropTypes.string.isRequired,
+  appType: PropTypes.string.isRequired,
+  essays: PropTypes.array.isRequired,
+  show: PropTypes.bool.isRequired,
+  setShow: PropTypes.func.isRequired,
 }

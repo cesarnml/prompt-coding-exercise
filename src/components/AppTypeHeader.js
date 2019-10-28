@@ -1,5 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Heading } from 'grommet'
+
 export const AppTypeHeader = ({ appType }) => {
   return (
     <Box
@@ -18,4 +20,8 @@ export const AppTypeHeader = ({ appType }) => {
       </Heading>
     </Box>
   )
+}
+
+AppTypeHeader.propTypes = {
+  appType: PropTypes.string.isRequired,
 }

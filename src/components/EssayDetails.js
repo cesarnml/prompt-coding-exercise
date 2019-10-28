@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Text } from 'grommet'
 
 export const EssayDetails = ({ essay }) => {
@@ -24,4 +25,11 @@ export const EssayDetails = ({ essay }) => {
       <Text size='16px'>{essay.optional ? 'Optional' : 'Required'}</Text>
     </Box>
   )
+}
+
+EssayDetails.propTypes = {
+  essay: PropTypes.shape({
+    display_length: PropTypes.string.isRequired,
+    optional: PropTypes.bool.isRequired,
+  }),
 }

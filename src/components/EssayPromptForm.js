@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 import { Form, FormField, Button, TextArea } from 'grommet'
 import { UniContext } from 'App'
 
@@ -36,4 +37,22 @@ export const EssayPromptForm = ({ essay, slug, essays, textArea }) => {
       <Button label='submit' type='submit' />
     </Form>
   )
+}
+
+EssayPromptForm.propTypes = {
+  essay: PropTypes.shape({
+    slug: PropTypes.string.isRequired,
+  }),
+  essays: PropTypes.arrayOf(
+    PropTypes.shape({
+      slug: PropTypes.string.isRequired,
+      prompts: PropTypes.arrayOf(
+        PropTypes.shape({
+          slug: PropTypes.string.isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
+  slug: PropTypes.string.isRequired,
+  textArea: PropTypes.string.isRequired,
 }

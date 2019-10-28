@@ -12,15 +12,18 @@ const App = () => {
   const [ops, setOps] = useState([])
   const [university, setUniversity] = useState({})
   const [isLoading, setLoading] = useState(false)
+  const [isSelect, setSelect] = useState(false)
 
   useEffect(() => {
     const fetchUniversities = async () => {
+      setSelect(true)
       const { data: universities } = await getUniversities()
       const OPTIONS = universities.map(uni => ({
         val: uni.iped,
         lab: uni.name,
       }))
       setOps(OPTIONS)
+      setSelect(false)
     }
 
     fetchUniversities()
@@ -58,6 +61,7 @@ const App = () => {
         label='Select a university'
         ops={ops}
         setIped={setIped}
+        placeholder={isSelect ? 'loading ...' : 'Berkeley'}
       />
       <UniContext.Provider value={{ setUniversity }}>
         {isLoading ? (

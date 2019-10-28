@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Text } from 'grommet'
 export const EssayPromptText = ({ essay, hash, slug, prompt }) => {
   return (
@@ -16,4 +17,13 @@ export const EssayPromptText = ({ essay, hash, slug, prompt }) => {
       dangerouslySetInnerHTML={{ __html: prompt }}
     />
   )
+}
+
+EssayPromptText.propTypes = {
+  essay: PropTypes.shape({
+    prompts: PropTypes.array.isRequired,
+    hash: PropTypes.object,
+    slug: PropTypes.string.isRequired,
+    prompt: PropTypes.string,
+  }),
 }

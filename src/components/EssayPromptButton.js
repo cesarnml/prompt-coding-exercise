@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Button } from 'grommet'
 import { Edit } from 'grommet-icons'
 
@@ -21,4 +22,9 @@ export const EssayPromptButton = ({ index, setModal }) => {
       />
     </Box>
   )
+}
+
+EssayPromptButton.propTypes = {
+  index: PropTypes.number.isRequired,
+  setModal: PropTypes.func.isRequired,
 }

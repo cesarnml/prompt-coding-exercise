@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Box, Select, Text } from 'grommet'
 import styled from 'styled-components'
 
@@ -13,7 +14,7 @@ const StyledSelect = styled(Select)`
   color: #444;
 `
 
-export const UniversitySelect = ({ label, ops, setIped }) => {
+export const UniversitySelect = ({ label, ops, setIped, placeholder }) => {
   const [value, setValue] = useState('')
   const [options, setOptions] = useState([])
 
@@ -36,7 +37,7 @@ export const UniversitySelect = ({ label, ops, setIped }) => {
           id='university-select'
           size='medium'
           dropHeight='medium'
-          placeholder='MIT'
+          placeholder={placeholder}
           searchPlaceholder='Search a university'
           labelKey='lab'
           valueKey='val'
@@ -57,4 +58,16 @@ export const UniversitySelect = ({ label, ops, setIped }) => {
       </Box>
     </Container>
   )
+}
+
+UniversitySelect.propTypes = {
+  label: PropTypes.string.isRequired,
+  ops: PropTypes.arrayOf(
+    PropTypes.shape({
+      lab: PropTypes.string,
+      value: PropTypes.string,
+    })
+  ),
+  setIped: PropTypes.func.isRequired,
+  placeholder: PropTypes.string.isRequired,
 }

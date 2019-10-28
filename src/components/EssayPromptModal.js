@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Layer, Box, Button, CheckBox } from 'grommet'
 import { stripHtml } from 'utils'
 
@@ -46,4 +47,14 @@ export const EssayPromptModal = ({ index, setModal, essay, hash, setHash }) => {
       </Box>
     </Layer>
   )
+}
+
+EssayPromptModal.propTypes = {
+  index: PropTypes.number.isRequired,
+  setModal: PropTypes.func.isRequired,
+  essay: PropTypes.shape({
+    slug: PropTypes.string.isRequired,
+  }),
+  hash: PropTypes.object.isRequired,
+  setHash: PropTypes.func.isRequired,
 }

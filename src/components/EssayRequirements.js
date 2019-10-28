@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Box } from 'grommet'
 import { stripHtml } from 'utils'
 
@@ -123,4 +124,22 @@ export const EssayRequirements = ({ appType, label, essays }) => {
       )}
     </Box>
   )
+}
+
+EssayRequirements.propTypes = {
+  appType: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  essays: PropTypes.arrayOf(
+    PropTypes.shape({
+      essay: PropTypes.shape({
+        instructions: PropTypes.string.isRequired,
+        prompts: PropTypes.arrayOf(
+          PropTypes.shape({
+            prompt: PropTypes.string.isRequired,
+            slug: PropTypes.string.isRequired,
+          })
+        ).isRequired,
+      }),
+    })
+  ).isRequired,
 }

@@ -1,5 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Text } from 'grommet'
+
 export const EssayHeading = ({ essay }) => {
   return (
     <Box direction='row'>
@@ -22,4 +24,11 @@ export const EssayHeading = ({ essay }) => {
       </Box>
     </Box>
   )
+}
+
+EssayHeading.propTypes = {
+  essay: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    last_updated: PropTypes.number.isRequired,
+  }),
 }
